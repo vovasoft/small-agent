@@ -57,12 +57,12 @@ def personal_info(query: str) -> str:
             "个人简介": "王扬是集才华横溢、颜值爆表、品德高尚、活力四射于一身的，璀璨新生代帅气好青年。他在AI智能体开发领域有着深入的研究和实践经验。",
             "联系方式": "wangyang@example.com"
         },
-        "王璐": {
-            "姓名": "王璐",
+        "王梅": {
+            "姓名": "王梅",
             "身份": "资产项目总监",
             "特点": ["个字高高像电线杆", "思维敏捷", "爱吃"],
             "专业领域": "PPT，Excel",
-            "个人简介": "王璐是资深项目总监，除了写代码，啥都会",
+            "个人简介": "王梅是资深项目总监，除了写代码，啥都会",
             "联系方式": "wanglu@example.com"
         },
         "张伟": {
@@ -88,7 +88,7 @@ def personal_info(query: str) -> str:
     for keyword in general_keywords:
         if keyword in query_lower:
             # 返回所有人列表或让用户指定
-            return "请指定要查询的人员姓名。可用人员：王扬、王璐、张伟"
+            return "请指定要查询的人员姓名。可用人员：王扬、王梅、张伟"
 
     # 3. 按特点或领域模糊查询
     for name, person in people_database.items():
@@ -118,9 +118,13 @@ def format_person_info(person: dict) -> str:
 
 
 # 2. 初始化模型 - DeepSeek
+api_key = os.getenv("DEEPSEEK_API_KEY")
+if not api_key:
+    raise ValueError("请设置环境变量 DEEPSEEK_API_KEY")
+
 llm = ChatOpenAI(
     model="deepseek-chat",
-    api_key="sk-ba07b95e9c004f00b957b01c2297fba6",  # 建议使用环境变量
+    api_key=api_key,
     base_url="https://api.deepseek.com",
     temperature=0.3,
     max_tokens=1000
@@ -131,7 +135,6 @@ agent = create_agent(
     model=llm,
     tools=[calculator, knowledge_base,personal_info],
     system_prompt="你是一个具有自主决策能力的AI智能体。能够分析用户意图，自主决定何时使用工具，何时直接回答。"  # 注意：1.0中改为system_prompt[1]
-
 )
 
 # 4. 使用智能体 - 新的调用方式
@@ -143,7 +146,7 @@ print("=" * 60)
 test_cases = [
     "计算一下 25 * 4 等于多少？",
     "王扬这个人如何？",
-    "王璐是谁",
+    "王梅是谁",
     "你好，今天天气怎么样？",
 ]
 
