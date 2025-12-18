@@ -1,0 +1,58 @@
+{
+  "title": "知识沉淀失败",
+  "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}",
+  "timestamp": "2025-12-18T22:27:53.982261",
+  "raw_data": {
+    "timestamp": "2025-12-18T22:27:53.955427",
+    "user_input": "我想计算农业的相关指标情况",
+    "intent_recognition": {
+      "intent_category": "农业经济",
+      "target_configs": [
+        "农业总支出指标计算",
+        "农业总收入指标计算"
+      ],
+      "confidence": 0.95
+    },
+    "metric_calculations": {
+      "success": true,
+      "results": [
+        {
+          "config_name": "农业总支出指标计算",
+          "result": {
+            "success": true,
+            "data": {
+              "total_expense": 12500.5
+            }
+          }
+        },
+        {
+          "config_name": "农业总收入指标计算",
+          "result": {
+            "success": true,
+            "data": {
+              "total_income": 18500.75
+            }
+          }
+        }
+      ]
+    },
+    "conversation_flow": [],
+    "key_insights": [],
+    "prompts_used": [],
+    "api_calls": [
+      {
+        "config_name": "农业总支出指标计算",
+        "success": true,
+        "status_code": null,
+        "response_size": 26
+      },
+      {
+        "config_name": "农业总收入指标计算",
+        "success": true,
+        "status_code": null,
+        "response_size": 26
+      }
+    ],
+    "errors": []
+  }
+}

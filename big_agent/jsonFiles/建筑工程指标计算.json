@@ -1,0 +1,9 @@
+{
+  "name": "建筑工程指标计算",
+  "description": "计算建筑工程的成本和进度指标",
+  "category": "建筑工程",
+  "version": "1.0.0",
+  "author": "big_agent",
+  "created_at": "2024-12-18",
+  "keywords": ["建筑", "工程", "指标", "成本", "进度"]
+}

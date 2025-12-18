@@ -1,0 +1,148 @@
+2025-12-18 22:27:29 - big_agent_demo - INFO - === Big Agent - 多Agent LangGraph框架完整演示 ===
+2025-12-18 22:27:29 - big_agent_demo - INFO - === 系统信息 ===
+2025-12-18 22:27:29 - big_agent_demo - INFO - Python版本: 3.10.19 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 16:41:31) [MSC v.1929 64 bit (AMD64)]
+2025-12-18 22:27:29 - big_agent_demo - INFO - 操作系统: Windows 10
+2025-12-18 22:27:29 - big_agent_demo - INFO - 工作目录: E:\Github\small-agent\big_agent
+2025-12-18 22:27:29 - big_agent_demo - INFO - 目录检查: agents/ -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 目录检查: jsonFiles/ -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 目录检查: tests/ -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 目录检查: knowledge_base/ -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 目录检查: logs/ -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 文件检查: big_agent_workflow.py -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 文件检查: mock_api_server.py -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - 文件检查: config.py -> 存在
+2025-12-18 22:27:29 - big_agent_demo - INFO - === 系统信息结束 ===
+2025-12-18 22:27:29 - big_agent_demo - INFO - 工作流步骤: 步骤1 - 启动模拟API服务器
+2025-12-18 22:27:29 - big_agent_demo - INFO - === 启动模拟API服务器 ===
+2025-12-18 22:27:29 - big_agent_demo - INFO - API服务器启动命令已执行，等待启动完成...
+2025-12-18 22:27:32 - big_agent_demo - INFO - 系统状态[API服务器]: 启动成功 - 状态: healthy, 服务数: 2
+2025-12-18 22:27:32 - big_agent_demo - INFO - 访问 http://localhost:8000/docs 查看API文档
+2025-12-18 22:27:32 - big_agent_demo - INFO - 工作流步骤: 步骤2 - 运行模拟系统演示
+2025-12-18 22:27:32 - big_agent_demo - INFO - === 模拟系统演示 ===
+2025-12-18 22:27:32 - big_agent_demo - INFO - 开始运行模拟系统测试...
+2025-12-18 22:27:32 - big_agent_demo - INFO - 系统状态[模拟演示]: 成功 - 系统架构验证完成
+2025-12-18 22:27:32 - big_agent_demo - INFO - === 模拟系统演示完成 ===
+2025-12-18 22:27:32 - big_agent_demo - INFO - 工作流步骤: 步骤3 - 运行真实系统演示
+2025-12-18 22:27:32 - big_agent_demo - INFO - === 真实系统演示 ===
+2025-12-18 22:27:32 - big_agent_demo - INFO - 开始运行真实系统演示...
+2025-12-18 22:27:33 - big_agent_demo - INFO - 工作流步骤: 真实演示 - 显示系统状态
+2025-12-18 22:27:33 - big_agent_demo - INFO - 工作流步骤: 真实演示 - 运行农业指标计算
+2025-12-18 22:27:34 - big_agent_demo - INFO - 工作流步骤: 真实演示 - 运行知识库搜索
+2025-12-18 22:27:34 - big_agent_demo - INFO - 系统状态[真实演示]: 成功 - 完整功能演示完成
+2025-12-18 22:27:34 - big_agent_demo - INFO - === 真实系统演示完成 ===
+2025-12-18 22:27:34 - big_agent_demo - INFO - 工作流步骤: 步骤4 - 生成功能总结
+2025-12-18 22:27:34 - big_agent_demo - INFO - === Big Agent 系统功能总结 ===
+2025-12-18 22:27:34 - big_agent_demo - INFO - 系统核心功能:
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] 意图识别Agent - 智能分析用户查询意图
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] 指标计算Agent - 调用API进行专业指标计算
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] 知识沉淀Agent - 自动整理和保存知识文档
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] LangGraph工作流 - 协调多Agent协同工作
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] JSON配置系统 - 灵活定义指标计算服务
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] FastAPI模拟服务器 - 本地API服务模拟
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] 知识库系统 - 历史查询结果积累
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] 完整测试套件 - 系统功能验证
+2025-12-18 22:27:34 - big_agent_demo - INFO -   [OK] 演示脚本 - 用户友好的功能展示
+2025-12-18 22:27:34 - big_agent_demo - INFO - 核心优势:
+2025-12-18 22:27:34 - big_agent_demo - INFO -   - 模块化设计，易于扩展
+2025-12-18 22:27:34 - big_agent_demo - INFO -   - 智能意图理解和路由
+2025-12-18 22:27:34 - big_agent_demo - INFO -   - 自动知识积累和复用
+2025-12-18 22:27:34 - big_agent_demo - INFO -   - 完善的错误处理机制
+2025-12-18 22:27:34 - big_agent_demo - INFO -   - 支持真实和模拟环境
+2025-12-18 22:27:34 - big_agent_demo - INFO - === Big Agent 系统功能总结结束 ===
+2025-12-18 22:27:34 - big_agent_demo - INFO - 工作流步骤: 步骤5 - 生成使用指南
+2025-12-18 22:27:34 - big_agent_demo - INFO - === 使用指南 ===
+2025-12-18 22:27:34 - big_agent_demo - INFO - 1. 环境准备:
+2025-12-18 22:27:34 - big_agent_demo - INFO -    conda create -n big_agent python=3.10 -y
+2025-12-18 22:27:34 - big_agent_demo - INFO -    conda activate big_agent
+2025-12-18 22:27:34 - big_agent_demo - INFO -    pip install -r requirements.txt
+2025-12-18 22:27:34 - big_agent_demo - INFO - 2. 配置API密钥:
+2025-12-18 22:27:34 - big_agent_demo - INFO -    编辑 .env 文件，设置 DEEPSEEK_API_KEY
+2025-12-18 22:27:34 - big_agent_demo - INFO - 3. 启动系统:
+2025-12-18 22:27:34 - big_agent_demo - INFO -    启动模拟API服务器: python mock_api_server.py
+2025-12-18 22:27:34 - big_agent_demo - INFO -    运行完整演示: python run_complete_demo.py
+2025-12-18 22:27:34 - big_agent_demo - INFO - 4. 运行测试:
+2025-12-18 22:27:34 - big_agent_demo - INFO -    python tests/run_tests.py         # 完整测试套件
+2025-12-18 22:27:34 - big_agent_demo - INFO -    python -m pytest tests/ -v        # 详细测试输出
+2025-12-18 22:27:34 - big_agent_demo - INFO - === 使用指南结束 ===
+2025-12-18 22:27:34 - big_agent_demo - INFO - 工作流步骤: 清理 - 停止API服务器
+2025-12-18 22:27:34 - big_agent_demo - INFO - === 停止模拟API服务器 ===
+2025-12-18 22:27:34 - big_agent_demo - INFO - 正在终止API服务器进程...
+2025-12-18 22:27:34 - big_agent_demo - INFO - 系统状态[API服务器]: 已停止
+2025-12-18 22:27:34 - big_agent_demo - INFO - === 停止模拟API服务器完成 ===
+2025-12-18 22:36:51 - big_agent_demo - INFO - === Big Agent - 多Agent LangGraph框架完整演示 ===
+2025-12-18 22:36:51 - big_agent_demo - INFO - === 系统信息 ===
+2025-12-18 22:36:51 - big_agent_demo - INFO - Python版本: 3.10.19 | packaged by Anaconda, Inc. | (main, Oct 21 2025, 16:41:31) [MSC v.1929 64 bit (AMD64)]
+2025-12-18 22:36:51 - big_agent_demo - INFO - 操作系统: Windows 10
+2025-12-18 22:36:51 - big_agent_demo - INFO - 工作目录: E:\Github\small-agent\big_agent
+2025-12-18 22:36:51 - big_agent_demo - INFO - 目录检查: agents/ -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 目录检查: jsonFiles/ -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 目录检查: tests/ -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 目录检查: knowledge_base/ -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 目录检查: logs/ -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 文件检查: big_agent_workflow.py -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 文件检查: mock_api_server.py -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - 文件检查: config.py -> 存在
+2025-12-18 22:36:51 - big_agent_demo - INFO - === 系统信息结束 ===
+2025-12-18 22:36:51 - big_agent_demo - INFO - 工作流步骤: 步骤1 - 启动模拟API服务器
+2025-12-18 22:36:51 - big_agent_demo - INFO - === 启动模拟API服务器 ===
+2025-12-18 22:36:51 - big_agent_demo - INFO - API服务器启动命令已执行，等待启动完成...
+2025-12-18 22:36:54 - big_agent_demo - INFO - 系统状态[API服务器]: 启动成功 - 状态: healthy, 服务数: 2
+2025-12-18 22:36:54 - big_agent_demo - INFO - 访问 http://localhost:8000/docs 查看API文档
+2025-12-18 22:36:54 - big_agent_demo - INFO - 工作流步骤: 步骤2 - 运行模拟系统演示
+2025-12-18 22:36:54 - big_agent_demo - INFO - === 模拟系统演示 ===
+2025-12-18 22:36:54 - big_agent_demo - INFO - 开始运行模拟系统测试...
+2025-12-18 22:36:54 - big_agent_demo - INFO - 系统状态[模拟演示]: 成功 - 系统架构验证完成
+2025-12-18 22:36:54 - big_agent_demo - INFO - === 模拟系统演示完成 ===
+2025-12-18 22:36:54 - big_agent_demo - INFO - 工作流步骤: 步骤3 - 运行真实系统演示
+2025-12-18 22:36:54 - big_agent_demo - INFO - === 真实系统演示 ===
+2025-12-18 22:36:54 - big_agent_demo - INFO - 开始运行真实系统演示...
+2025-12-18 22:36:55 - big_agent_demo - INFO - 工作流步骤: 真实演示 - 显示系统状态
+2025-12-18 22:36:55 - big_agent_demo - INFO - 工作流步骤: 真实演示 - 运行农业指标计算
+2025-12-18 22:39:15 - big_agent_demo - INFO - 工作流步骤: 真实演示 - 运行知识库搜索
+2025-12-18 22:39:15 - big_agent_demo - INFO - 系统状态[真实演示]: 成功 - 完整功能演示完成
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 真实系统演示完成 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 工作流步骤: 步骤4 - 生成功能总结
+2025-12-18 22:39:15 - big_agent_demo - INFO - === Big Agent 系统功能总结 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 系统核心功能:
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] 意图识别Agent - 智能分析用户查询意图
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] 指标计算Agent - 调用API进行专业指标计算
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] 知识沉淀Agent - 自动整理和保存知识文档
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] LangGraph工作流 - 协调多Agent协同工作
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] JSON配置系统 - 灵活定义指标计算服务
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] FastAPI模拟服务器 - 本地API服务模拟
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] 知识库系统 - 历史查询结果积累
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] 完整测试套件 - 系统功能验证
+2025-12-18 22:39:15 - big_agent_demo - INFO -   [OK] 演示脚本 - 用户友好的功能展示
+2025-12-18 22:39:15 - big_agent_demo - INFO - 核心优势:
+2025-12-18 22:39:15 - big_agent_demo - INFO -   - 模块化设计，易于扩展
+2025-12-18 22:39:15 - big_agent_demo - INFO -   - 智能意图理解和路由
+2025-12-18 22:39:15 - big_agent_demo - INFO -   - 自动知识积累和复用
+2025-12-18 22:39:15 - big_agent_demo - INFO -   - 完善的错误处理机制
+2025-12-18 22:39:15 - big_agent_demo - INFO -   - 支持真实和模拟环境
+2025-12-18 22:39:15 - big_agent_demo - INFO - === Big Agent 系统功能总结结束 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 工作流步骤: 步骤5 - 生成使用指南
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 使用指南 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 1. 环境准备:
+2025-12-18 22:39:15 - big_agent_demo - INFO -    conda create -n big_agent python=3.10 -y
+2025-12-18 22:39:15 - big_agent_demo - INFO -    conda activate big_agent
+2025-12-18 22:39:15 - big_agent_demo - INFO -    pip install -r requirements.txt
+2025-12-18 22:39:15 - big_agent_demo - INFO - 2. 配置API密钥:
+2025-12-18 22:39:15 - big_agent_demo - INFO -    编辑 .env 文件，设置 DEEPSEEK_API_KEY
+2025-12-18 22:39:15 - big_agent_demo - INFO - 3. 启动系统:
+2025-12-18 22:39:15 - big_agent_demo - INFO -    启动模拟API服务器: python mock_api_server.py
+2025-12-18 22:39:15 - big_agent_demo - INFO -    运行完整演示: python run_complete_demo.py
+2025-12-18 22:39:15 - big_agent_demo - INFO - 4. 运行测试:
+2025-12-18 22:39:15 - big_agent_demo - INFO -    python tests/run_tests.py         # 完整测试套件
+2025-12-18 22:39:15 - big_agent_demo - INFO -    python -m pytest tests/ -v        # 详细测试输出
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 使用指南结束 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 演示总结 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 系统状态[模拟系统演示]: 成功 - 系统架构和核心逻辑运行正常
+2025-12-18 22:39:15 - big_agent_demo - INFO - 系统状态[真实系统演示]: 成功 - 包括真实API调用和知识沉淀
+2025-12-18 22:39:15 - big_agent_demo - INFO - 演示完成，系统运行正常！
+2025-12-18 22:39:15 - big_agent_demo - INFO - 接下来可以设置DeepSeek API密钥体验完整功能
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 演示总结结束 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 工作流步骤: 清理 - 停止API服务器
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 停止模拟API服务器 ===
+2025-12-18 22:39:15 - big_agent_demo - INFO - 正在终止API服务器进程...
+2025-12-18 22:39:15 - big_agent_demo - INFO - 系统状态[API服务器]: 已停止
+2025-12-18 22:39:15 - big_agent_demo - INFO - === 停止模拟API服务器完成 ===

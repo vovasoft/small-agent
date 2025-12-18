@@ -1,0 +1,112 @@
+{
+  "title": "农业指标查询知识沉淀 - 20251218_214730",
+  "summary": "本次查询涉及农业总支出和总收入指标计算，系统成功识别用户意图并调用相应API进行计算。",
+  "key_findings": [
+    "总支出约12500.50元，其中生产资料支出占比最高",
+    "总收入约18500.75元，净利润率达到25%",
+    "计算结果基于标准模拟方法，置信度良好"
+  ],
+  "patterns_identified": [
+    "农业指标查询通常涉及支出和收入两个方面",
+    "用户偏好使用年度数据进行分析"
+  ],
+  "prompts_extracted": [
+    "我想计算农业的相关指标情况",
+    "分析农业总支出和总收入"
+  ],
+  "keywords": [
+    "农业",
+    "支出",
+    "收入",
+    "指标",
+    "经济"
+  ],
+  "recommendations": [
+    "建议定期监控农业成本结构",
+    "考虑优化补贴收入占比"
+  ],
+  "metadata": {
+    "created_at": "2025-12-18T21:47:30.791218",
+    "source": "big_agent_workflow",
+    "version": "1.0"
+  },
+  "raw_data": {
+    "user_input": "计算2023年农业经济指标数据",
+    "intent_result": {
+      "input_type": "text_only",
+      "intent_category": "农业经济",
+      "target_configs": [
+        "农业总支出指标计算",
+        "农业总收入指标计算"
+      ],
+      "key_parameters": {
+        "time_period": "2023",
+        "region": "全国"
+      },
+      "confidence": 0.95,
+      "has_csv_data": false,
+      "csv_data": null
+    },
+    "calculation_results": {
+      "success": true,
+      "results": [
+        {
+          "config_name": "农业总支出指标计算",
+          "result": {
+            "success": true,
+            "data": {
+              "total_expense": 12500.5,
+              "expense_breakdown": {
+                "production_materials": 4500.0,
+                "labor_cost": 3200.0,
+                "land_rent": 2500.0,
+                "equipment_depreciation": 1200.0,
+                "other_costs": 1100.5
+              },
+              "calculation_metadata": {
+                "method_used": "standard_simulation",
+                "confidence_level": 0.92
+              }
+            }
+          }
+        },
+        {
+          "config_name": "农业总收入指标计算",
+          "result": {
+            "success": true,
+            "data": {
+              "total_income": 18500.75,
+              "income_breakdown": {
+                "crop_sales": 15000.0,
+                "subsidy_income": 2500.0,
+                "other_income": 1000.75
+              },
+              "profitability_metrics": {
+                "net_profit_margin": 0.25
+              },
+              "calculation_metadata": {
+                "method_used": "advanced_simulation",
+                "confidence_level": 0.89
+              }
+            }
+          }
+        }
+      ],
+      "total_configs": 2,
+      "successful_calculations": 2
+    },
+    "messages": [
+      {
+        "role": "user",
+        "content": "计算2023年农业经济指标数据",
+        "timestamp": "2025-12-18T21:47:30.791218"
+      },
+      {
+        "role": "assistant",
+        "content": "处理完成",
+        "timestamp": "2025-12-18T21:47:30.791218"
+      }
+    ],
+    "errors": []
+  }
+}

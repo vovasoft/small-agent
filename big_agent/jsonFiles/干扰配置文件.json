@@ -1,0 +1,74 @@
+{
+  "name": "干扰配置文件",
+  "description": "这是一个完全无关的干扰配置文件，不应该被agent使用",
+  "category": "干扰",
+  "version": "0.0.1",
+  "author": "interference_generator",
+  "created_at": "2024-12-18",
+  "keywords": ["干扰", "测试", "无关"],
+  "random_data": {
+    "useless_field": "这个字段完全没有用处",
+    "dummy_value": 999,
+    "fake_array": ["item1", "item2", "item3"],
+    "nested_object": {
+      "level1": {
+        "level2": {
+          "level3": "deep nested value"
+        }
+      }
+    }
+  },
+  "api_config": {
+    "method": "GET",
+    "url": "http://fake.api.com/interference",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer fake_token"
+    },
+    "timeout": 5
+  },
+  "param_mapping": {
+    "fake_param": "fake_param"
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "fake_param": {
+        "type": "string",
+        "description": "假的参数"
+      }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "fake_result": {
+        "type": "string",
+        "description": "假的结果"
+      }
+    }
+  },
+  "calculation_logic": {
+    "steps": [
+      "假步骤1",
+      "假步骤2"
+    ],
+    "formulas": {
+      "fake_formula": "fake_value * 2"
+    }
+  },
+  "data_sources": [
+    {
+      "name": "假数据源",
+      "type": "fake",
+      "update_frequency": "never"
+    }
+  ],
+  "validation_rules": [
+    {
+      "field": "fake_param",
+      "rule": "always_true",
+      "message": "总是通过"
+    }
+  ]
+}

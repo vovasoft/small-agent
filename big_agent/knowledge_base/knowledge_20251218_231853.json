@@ -1,0 +1,64 @@
+{
+  "title": "用户查询知识沉淀 - 20251218_231853",
+  "summary": "```json\n{\n  \"title\": \"农业经济指标计算分析报告\",\n  \"summary\": \"本次查询旨在计算农业经济相关指标，成功执行了农业总支出和农业总收入两项指标的计算，分别获得具体数值结果，系统调用正常，无错误发生。\",\n  \"key_findings\": [\n    \"农业总支出为12,500.5货币单位。\",\n    \"农业总收入为18,500.75货币单位。\",\n    \"基于以上数据，初步计算得出农业净收益为6,000.25货币单位（总收入 - 总支出）。\",\n    \"两项指标计算均成功完成，API调用成功率为100%。\"\n  ],\n  \"patterns_identified\": [\n    \"用户查询倾向于同时获取支出与收入两类对称性指标，以进行整体经济状况评估。\",\n    \"指标计算流程呈现模块化特征，每个指标配置独立运行并返回结构化结果。\",\n    \"成功的指标计算返回统一的数据结构，包含success标志与具体data字段。\"\n  ],\n  \"prompts_extracted\": [\n    \"计算农业的相关指标情况\",\n    \"农业总支出指标计算\",\n    \"农业总收入指标计算\"\n  ],\n  \"keywords\": [\n    \"农业经济\",\n    \"指标计算\",\n    \"农业总支出\",\n    \"农业总收入\",\n    \"总支出\",\n    \"总收入\",\n    \"净收益\",\n    \"API调用\"\n  ],\n  \"recommendations\": [\n    \"建议后续可扩展计算利润率、成本收入比等衍生指标，以提供更深入的洞察。\",\n    \"可考虑将“农业净收益”作为一项标准指标配置加入系统，避免用户手动计算。\",\n    \"对于同时请求多项指标的用户，系统可优化为单次API调用批量处理，提升效率。\",\n    \"建议在结果中增加计量单位说明，提升数据的可读性与准确性。\"\n  ],\n  \"lessons_learned\": [\n    \"明确的意图识别（农业经济）与目标配置（具体指标名）是成功触发并执行计算的关键前提。\",\n    \"结构化的结果返回格式（如success标志、data对象）有利于结果的自动解析与后续处理。\",\n    \"用户原始查询可能较为概括，依赖系统将“相关指标”解析为具体的、可执行的指标配置列表。\",\n    \"同时计算支出与收入指标是一种常见且有效的分析模式，系统应支持此类关联指标的协同计算与呈现。\"\n  ]\n}\n```",
+  "generated_at": "2025-12-18T23:18:53.178825",
+  "type": "text_document",
+  "metadata": {
+    "created_at": "2025-12-18T23:18:34.737640",
+    "source": "big_agent_workflow",
+    "version": "1.0"
+  },
+  "raw_data": {
+    "timestamp": "2025-12-18T23:18:34.737640",
+    "user_input": "我想计算农业的相关指标情况",
+    "intent_recognition": {
+      "intent_category": "农业经济",
+      "target_configs": [
+        "农业总支出指标计算",
+        "农业总收入指标计算"
+      ],
+      "confidence": 0.95
+    },
+    "metric_calculations": {
+      "success": true,
+      "results": [
+        {
+          "config_name": "农业总支出指标计算",
+          "result": {
+            "success": true,
+            "data": {
+              "total_expense": 12500.5
+            }
+          }
+        },
+        {
+          "config_name": "农业总收入指标计算",
+          "result": {
+            "success": true,
+            "data": {
+              "total_income": 18500.75
+            }
+          }
+        }
+      ]
+    },
+    "conversation_flow": [],
+    "key_insights": [],
+    "prompts_used": [],
+    "api_calls": [
+      {
+        "config_name": "农业总支出指标计算",
+        "success": true,
+        "status_code": null,
+        "response_size": 26
+      },
+      {
+        "config_name": "农业总收入指标计算",
+        "success": true,
+        "status_code": null,
+        "response_size": 26
+      }
+    ],
+    "errors": []
+  }
+}

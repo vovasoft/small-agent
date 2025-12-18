@@ -1,0 +1,115 @@
+2025-12-18 23:38:53 - real_model_calls - INFO - 开始真实大模型调用测试
+2025-12-18 23:38:53 - real_model_calls - INFO - API Key: 已配置
+2025-12-18 23:38:53 - real_model_calls - INFO - === 测试意图识别Agent大模型调用 ===
+2025-12-18 23:38:53 - real_model_calls - INFO - 用户输入: 我想计算农业的相关指标情况
+2025-12-18 23:38:53 - intent_recognition_agent - INFO - ========================================
+2025-12-18 23:38:53 - intent_recognition_agent - INFO - [AGENT] IntentRecognitionAgent (意图识别Agent) - Agent 1/3
+2025-12-18 23:38:53 - intent_recognition_agent - INFO - [MODEL_INPUT] IntentRecognitionAgent:
+2025-12-18 23:38:53 - intent_recognition_agent - INFO - [CONTEXT] 系统当前有 19 个可用配置文件
+2025-12-18 23:38:53 - intent_recognition_agent - INFO - Available configs:
+- 交通流量指标计算: 计算交通领域的车流量和运输效率指标
+- 农业总支出指标计算: 计算农业领域的各项支出指标，包括生产资料支出、劳动力支出、土地租金等
+- 农业总收入指标计算: 计算农业领域的各项收入指标，包括农产品销售收入、补贴收入、政府扶持等
+- 医疗服务指标计算: 计算医疗领域的服务质量和资源利用指标
+- 商业销售额指标计算: 计算商业领域的销售额和营业收入指标
+- 工业总产值指标计算: 计算工业领域的总产值指标，包括制造业、服务业等
+- 工业能耗指标计算: 计算工业领域的能源消耗指标和效率分析
+- 干扰配置文件: 这是一个完全无关的干扰配置文件，不应该被agent使用
+- 建筑工程指标计算: 计算建筑工程的成本和进度指标
+- 房地产价格指标计算: 计算房地产领域的价格和交易量指标
+- 教育质量指标计算: 计算教育领域的教学质量和学生发展指标
+- 旅游收入指标计算: 计算旅游业的收入和游客流量指标
+- 物流运输指标计算: 计算物流运输的效率和成本指标
+- 环保排放指标计算: 计算环保领域的污染物排放和环境质量指标
+- 科技研发指标计算: 计算科技领域的研发投入和创新产出指标
+- 能源消耗指标计算: 计算能源领域的消耗量和利用效率指标
+- 金融投资指标计算: 计算金融领域的投资回报和风险指标
+- 零售业销售指标计算: 计算零售业的销售业绩和市场份额指标
+- 餐饮服务指标计算: 计算餐饮服务的营业额和客户满意度指标
+
+User input: 我想计算农业的相关指标情况
+2025-12-18 23:38:53 - intent_recognition_agent - INFO - ========================================
+2025-12-18 23:38:54 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2025-12-18 23:38:57 - intent_recognition_agent - INFO - [MODEL_OUTPUT] IntentRecognitionAgent: {"input_type": "text_only", "intent_category": "农业", "target_configs": ["农业总支出指标计算", "农业总收入指标计算"], "key_parameters": {"domain": "农业", "request_type": "指标计算", "scope": "相关指标情况"}, "confidence": 0.95}
+2025-12-18 23:38:57 - intent_recognition_agent - INFO - [RESULT] 识别出 2 个目标配置
+2025-12-18 23:38:57 - intent_recognition_agent - INFO - ========================================
+2025-12-18 23:38:57 - real_model_calls - INFO - 意图识别结果: {'input_type': 'text_only', 'intent_category': '农业', 'target_configs': ['农业总支出指标计算', '农业总收入指标计算'], 'key_parameters': {'domain': '农业', 'request_type': '指标计算', 'scope': '相关指标情况'}, 'confidence': 0.95, 'has_csv_data': False, 'csv_data': None}
+2025-12-18 23:38:57 - real_model_calls - INFO - ==================================================
+2025-12-18 23:38:57 - real_model_calls - INFO - === 测试知识沉淀Agent大模型调用 ===
+2025-12-18 23:38:57 - real_model_calls - INFO - 准备生成知识文档...
+2025-12-18 23:38:57 - knowledge_precipitation_agent - INFO - ========================================
+2025-12-18 23:38:57 - knowledge_precipitation_agent - INFO - [AGENT] KnowledgePrecipitationAgent (知识沉淀Agent) - Agent 3/3
+2025-12-18 23:38:57 - knowledge_precipitation_agent - INFO - [MODEL_INPUT] KnowledgePrecipitationAgent:
+2025-12-18 23:38:57 - knowledge_precipitation_agent - INFO - [CONTEXT] 基于意图识别结果生成结构化知识文档
+2025-12-18 23:38:57 - knowledge_precipitation_agent - INFO - {
+  "user_input": "我想计算农业的相关指标情况",
+  "intent_category": "农业经济",
+  "target_configs": [
+    "农业总支出指标计算",
+    "农业总收入指标计算"
+  ],
+  "calculation_results": "{\n  \"success\": true,\n  \"results\": [\n    {\n      \"config_name\": \"农业总支出指标计算\",\n      \"result\": {\n        \"success\": true,\n        \"data\": {\n          \"total_expense\": 12500.5\n        }\n      }\n    },\n    {\n      \"config_name\": \"农业总收入指标计算\",\n      \"result\": {\n        \"success\": true,\n        \"data\": {\n          \"total_income\": 18500.75\n        }\n      }\n    }\n  ]\n}",
+  "api_calls_count": 2,
+  "errors": "[]"
+}
+2025-12-18 23:38:57 - knowledge_precipitation_agent - INFO - ========================================
+2025-12-18 23:38:57 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 200 OK"
+2025-12-18 23:39:17 - knowledge_precipitation_agent - INFO - [MODEL_OUTPUT] KnowledgePrecipitationAgent: ```json
+{
+  "title": "农业经济指标计算分析报告",
+  "summary": "本次查询旨在计算农业经济相关指标，成功执行了农业总支出与总收入两项指标的计算，分别获得具体数值结果，系统调用正常无错误。",
+  "key_findings": [
+    {
+      "指标名称": "农业总支出",
+      "数值": 12500.5,
+      "单位": "货币单位（如元）",
+      "状态": "计算成功"
+    },
+    {
+      "指标名称": "农业总收入",
+      "数值": 18500.75,
+      "单位": "货币单位（如元）",
+      "状态": "计算成功"
+    },
+    {
+      "整体发现": "农业总收入（18500.75）高于总支出（12500.5），初步计算净收益约为6000.25。"
+    }
+  ],
+  "patterns_identified": [
+    "用户倾向于同时计算支出与收入两类核心财务指标，以进行对比分析。",
+    "指标计算流程遵循“意图识别 -> 目标配置匹配 -> 执行计算 -> 返回结构化结果”的标准模式。",
+    "成功的查询通常具备明确的意图类别和具体的目标配置文件。"
+  ],
+  "prompts_extracted": [
+    "通用计算提示词：“请计算[领域]的[指标名称]指标。”",
+    "对比分析提示词：“我想计算[领域]的相关指标情况”，可自动触发核心收支指标的并行计算。",
+    "结构化结果请求：“请提供包含数值、单位和状态的结构化计算结果。”"
+  ],
+  "keywords": [
+    "农业经济",
+    "指标计算",
+    "农业总支出",
+    "农业总收入",
+    "意图识别",
+    "目标配置",
+    "结构化结果"
+  ],
+  "recommendations": [
+    "对于农业经济分析，建议后续可扩展计算“农业净利润”、“成本收益率”等衍生指标，以提供更深入的洞察。",
+    "在计算多指标时，系统可自动建议相关的对比或衍生指标，提升分析完整性。",
+    "建议在结果中明确标注货币单位及统计口径，避免歧义。"
+  ],
+  "lessons_learned": [
+    "清晰的意图分类（如“农业经济”）与具体的目标配置列表是驱动准确计算的关键前提。",
+    "并行计算多个关联指标能有效提升分析效率，本例中通过两次API调用即完成了核心财务概览。",
+    "保持结果数据的结构化（如success标志、data字段）有利于后续的系统集成与自动化处理。",
+    "无错误信息的返回表明查询指令清晰、配置匹配良好，这提示了高质量输入模板的重要性。"
+  ]
+}
+```
+2025-12-18 23:39:17 - knowledge_precipitation_agent - INFO - [RESULT] 知识文档生成完成
+2025-12-18 23:39:17 - knowledge_precipitation_agent - INFO - ========================================
+2025-12-18 23:39:17 - real_model_calls - INFO - 知识沉淀结果: True
+2025-12-18 23:39:17 - real_model_calls - INFO - 文档保存路径: knowledge_base\knowledge_20251218_233917.json
+2025-12-18 23:39:17 - real_model_calls - INFO - 真实大模型调用测试完成
+2025-12-18 23:39:17 - real_model_calls - INFO - 请查看日志文件了解大模型的输入输出详情

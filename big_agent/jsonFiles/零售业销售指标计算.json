@@ -1,0 +1,9 @@
+{
+  "name": "零售业销售指标计算",
+  "description": "计算零售业的销售业绩和市场份额指标",
+  "category": "商业贸易",
+  "version": "1.0.0",
+  "author": "big_agent",
+  "created_at": "2024-12-18",
+  "keywords": ["零售", "销售", "指标", "业绩", "市场"]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "商业销售额指标计算",
+  "description": "计算商业领域的销售额和营业收入指标",
+  "category": "商业经济",
+  "version": "1.0.0",
+  "author": "big_agent",
+  "created_at": "2024-12-18",
+  "keywords": ["商业", "销售额", "指标", "经济", "营业收入"]
+}

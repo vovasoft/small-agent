@@ -1,0 +1,149 @@
+{
+  "name": "农业总收入指标计算",
+  "description": "计算农业领域的各项收入指标，包括农产品销售收入、补贴收入、政府扶持等",
+  "category": "农业经济",
+  "version": "1.0.0",
+  "author": "big_agent",
+  "created_at": "2024-12-18",
+  "keywords": ["农业", "收入", "指标", "经济", "收益"],
+  "noise_field_alpha": "随机干扰数据A",
+  "legacy_settings": {
+    "old_api_endpoint": "http://old.api.com/income",
+    "deprecated_params": ["old_param1", "old_param2"]
+  },
+  "performance_metrics": {
+    "average_response_time": 150,
+    "success_rate": 0.98,
+    "error_count": 5
+  },
+  "random_metadata": {
+    "generated_at": "2024-12-18T10:30:00Z",
+    "checksum": "abc123def456",
+    "validation_status": "passed"
+  },
+  "api_config": {
+    "method": "POST",
+    "url": "http://127.0.0.1:8000/agriculture/income-calculation",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "timeout": 30
+  },
+  "param_mapping": {
+    "time_period": "time_period",
+    "region": "region",
+    "crop_type": "crop_type",
+    "market_type": "market_type",
+    "include_subsidies": "include_subsidies"
+  },
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "time_period": {
+        "type": "string",
+        "description": "时间周期，如'2023'或'2023-Q1'"
+      },
+      "region": {
+        "type": "string",
+        "description": "地区名称"
+      },
+      "crop_type": {
+        "type": "string",
+        "description": "作物类型"
+      },
+      "market_type": {
+        "type": "string",
+        "enum": ["domestic", "export", "both"],
+        "default": "both"
+      },
+      "include_subsidies": {
+        "type": "boolean",
+        "description": "是否包含政府补贴",
+        "default": true
+      }
+    },
+    "required": ["time_period"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "total_income": {
+        "type": "number",
+        "description": "总收入金额"
+      },
+      "income_breakdown": {
+        "type": "object",
+        "properties": {
+          "crop_sales": {"type": "number"},
+          "livestock_sales": {"type": "number"},
+          "subsidy_income": {"type": "number"},
+          "other_income": {"type": "number"}
+        }
+      },
+      "profitability_metrics": {
+        "type": "object",
+        "properties": {
+          "gross_profit_margin": {"type": "number"},
+          "net_profit_margin": {"type": "number"},
+          "return_on_investment": {"type": "number"}
+        }
+      },
+      "calculation_metadata": {
+        "type": "object",
+        "properties": {
+          "method_used": {"type": "string"},
+          "data_sources": {"type": "array"},
+          "confidence_level": {"type": "number"}
+        }
+      }
+    }
+  },
+  "calculation_logic": {
+    "steps": [
+      "收入数据收集和分类",
+      "市场价格调整",
+      "补贴和扶持资金核算",
+      "综合收入指标计算"
+    ],
+    "formulas": {
+      "total_income": "SUM(crop_sales + livestock_sales + subsidy_income + other_income)",
+      "gross_profit_margin": "(total_income - total_cost) / total_income",
+      "return_on_investment": "net_profit / total_investment"
+    }
+  },
+  "data_sources": [
+    {
+      "name": "农业农村部统计数据",
+      "type": "official_statistics",
+      "update_frequency": "quarterly"
+    },
+    {
+      "name": "农产品批发市场价格",
+      "type": "market_data",
+      "update_frequency": "daily"
+    },
+    {
+      "name": "财政补贴发放系统",
+      "type": "government_data",
+      "update_frequency": "monthly"
+    }
+  ],
+  "validation_rules": [
+    {
+      "field": "total_income",
+      "rule": "value >= 0",
+      "message": "总收入不能为负数"
+    },
+    {
+      "field": "time_period",
+      "rule": "matches_pattern",
+      "pattern": "^\\d{4}(-Q[1-4])?$",
+      "message": "时间周期格式无效"
+    },
+    {
+      "field": "region",
+      "rule": "not_empty",
+      "message": "地区信息不能为空"
+    }
+  ]
+}

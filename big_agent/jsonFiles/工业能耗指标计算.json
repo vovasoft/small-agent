@@ -1,0 +1,9 @@
+{
+  "name": "工业能耗指标计算",
+  "description": "计算工业领域的能源消耗指标和效率分析",
+  "category": "工业经济",
+  "version": "1.0.0",
+  "author": "big_agent",
+  "created_at": "2024-12-18",
+  "keywords": ["工业", "能耗", "指标", "能源", "效率"]
+}

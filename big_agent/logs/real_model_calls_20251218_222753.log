@@ -1,0 +1,30 @@
+2025-12-18 22:27:53 - real_model_calls - INFO - 开始真实大模型调用测试
+2025-12-18 22:27:53 - real_model_calls - INFO - API Key: 未配置或无效
+2025-12-18 22:27:53 - real_model_calls - INFO - === 测试意图识别Agent大模型调用 ===
+2025-12-18 22:27:53 - real_model_calls - INFO - 用户输入: 我想计算农业的相关指标情况
+2025-12-18 22:27:53 - intent_recognition_agent - INFO - [MODEL_INPUT] IntentRecognitionAgent: Available configs:
+- 农业总支出指标计算: 计算农业领域的各项支出指标，包括生产资料支出、劳动力支出、土地租金等
+- 农业总收入指标计算: 计算农业领域的各项收入指标，包括农产品销售收入、补贴收入、政府扶持等
+
+User input: 我想计算农业的相关指标情况
+2025-12-18 22:27:53 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2025-12-18 22:27:53 - real_model_calls - INFO - 意图识别结果: {'input_type': 'text_only', 'intent_category': 'unknown', 'target_configs': [], 'key_parameters': {}, 'confidence': 0.0, 'has_csv_data': False, 'csv_data': None, 'error': "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"}
+2025-12-18 22:27:53 - real_model_calls - INFO - ==================================================
+2025-12-18 22:27:53 - real_model_calls - INFO - === 测试知识沉淀Agent大模型调用 ===
+2025-12-18 22:27:53 - real_model_calls - INFO - 准备生成知识文档...
+2025-12-18 22:27:53 - knowledge_precipitation_agent - INFO - [MODEL_INPUT] KnowledgePrecipitationAgent: {
+  "user_input": "我想计算农业的相关指标情况",
+  "intent_category": "农业经济",
+  "target_configs": [
+    "农业总支出指标计算",
+    "农业总收入指标计算"
+  ],
+  "calculation_results": "{\n  \"success\": true,\n  \"results\": [\n    {\n      \"config_name\": \"农业总支出指标计算\",\n      \"result\": {\n        \"success\": true,\n        \"data\": {\n          \"total_expense\": 12500.5\n        }\n      }\n    },\n    {\n      \"config_name\": \"农业总收入指标计算\",\n      \"result\": {\n        \"success\": true,\n        \"data\": {\n          \"total_income\": 18500.75\n        }\n      }\n    }\n  ]\n}",
+  "api_calls_count": 2,
+  "errors": "[]"
+}
+2025-12-18 22:27:53 - httpx - INFO - HTTP Request: POST https://api.deepseek.com/chat/completions "HTTP/1.1 401 Unauthorized"
+2025-12-18 22:27:53 - real_model_calls - INFO - 知识沉淀结果: True
+2025-12-18 22:27:53 - real_model_calls - INFO - 文档保存路径: knowledge_base\knowledge_20251218_222753.json
+2025-12-18 22:27:53 - real_model_calls - INFO - 真实大模型调用测试完成
+2025-12-18 22:27:53 - real_model_calls - INFO - 请查看日志文件了解大模型的输入输出详情

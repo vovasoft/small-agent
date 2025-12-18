@@ -1,0 +1,45 @@
+{
+  "title": "知识沉淀失败",
+  "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}",
+  "timestamp": "2025-12-18T22:05:00.005825",
+  "raw_data": {
+    "timestamp": "2025-12-18T22:04:59.980476",
+    "user_input": "",
+    "intent_recognition": {
+      "input_type": "text_only",
+      "intent_category": "unknown",
+      "target_configs": [],
+      "key_parameters": {},
+      "confidence": 0.0,
+      "has_csv_data": false,
+      "csv_data": null,
+      "error": "Error code: 401 - {'error': {'message': 'Authentication Fails, Your api key: ****here is invalid', 'type': 'authentication_error', 'param': None, 'code': 'invalid_request_error'}}"
+    },
+    "metric_calculations": {
+      "success": false,
+      "message": "没有找到需要调用的配置文件",
+      "results": []
+    },
+    "conversation_flow": [
+      {
+        "role": "user",
+        "content": "",
+        "timestamp": "2025-12-18T22:04:59.399549"
+      },
+      {
+        "role": "assistant",
+        "content": "意图识别完成：类别-unknown，置信度-0.00",
+        "timestamp": "2025-12-18T22:04:59.980476"
+      },
+      {
+        "role": "assistant",
+        "content": "指标计算完成：成功 0/0 个配置",
+        "timestamp": "2025-12-18T22:04:59.980476"
+      }
+    ],
+    "key_insights": [],
+    "prompts_used": [],
+    "api_calls": [],
+    "errors": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "工业总产值指标计算",
+  "description": "计算工业领域的总产值指标，包括制造业、服务业等",
+  "category": "工业经济",
+  "version": "1.0.0",
+  "author": "big_agent",
+  "created_at": "2024-12-18",
+  "keywords": ["工业", "产值", "指标", "经济", "制造业"],
+  "api_config": {
+    "method": "POST",
+    "url": "http://127.0.0.1:8000/industrial/production-calculation",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "timeout": 30
+  }
+}
