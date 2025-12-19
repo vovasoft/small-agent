@@ -298,7 +298,7 @@ def log_system_info():
     logger.info(f"工作目录: {os.getcwd()}")
 
     # 检查关键目录
-    dirs_to_check = ["agents", "jsonFiles", "tests", "knowledge_base", "logs"]
+    dirs_to_check = ["agents", "json_files", "tests", "knowledge_base", "logs"]
     for dir_name in dirs_to_check:
         exists = os.path.exists(dir_name)
         status = "存在" if exists else "不存在"

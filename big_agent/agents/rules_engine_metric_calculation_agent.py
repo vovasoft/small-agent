@@ -1,21 +1,21 @@
 """
-指标计算Agent (Metric Calculation Agent)
-====================================
+规则引擎指标计算Agent (Rules Engine Metric Calculation Agent)
+===========================================================
 
-此Agent负责根据意图识别结果执行具体的指标计算任务。
+此Agent负责根据意图识别结果执行规则引擎模式的指标计算任务。
 
 核心功能：
-1. 配置文件加载：读取和解析JSON格式的指标计算配置文件
-2. API调用管理：根据配置文件调用相应的计算API
+1. 配置文件加载：读取和解析规则引擎指标计算配置文件
+2. API调用管理：根据配置文件调用规则引擎API
 3. 结果处理：处理API返回的数据，提取关键指标
 4. 错误处理：处理API调用失败、网络异常等错误情况
 5. 结果验证：验证计算结果的合理性和完整性
 
 工作流程：
 1. 接收意图识别结果和用户参数
-2. 加载对应的指标计算配置文件
-3. 构造API请求参数
-4. 调用远程计算服务
+2. 加载对应的规则引擎指标计算配置文件
+3. 构造API请求参数（id和input）
+4. 调用远程规则引擎服务
 5. 解析和验证返回结果
 6. 返回结构化的计算结果
 
@@ -27,15 +27,23 @@
 - 支持多种计算方法（标准、高级、自定义）
 
 配置文件结构：
-- api_config: API端点和认证信息
-- param_mapping: 参数映射规则
-- input_schema: 输入数据验证规则
-- output_schema: 输出数据结构定义
-- calculation_logic: 计算逻辑描述
+- id: 规则引擎执行ID
+- input: 数据文件路径
+- description: 规则描述
+
+API接口：
+POST http://localhost:8081/api/rules/executeKnowledge
+请求体：
+{
+    "id": "demo-黑色金属-0201",
+    "input": {
+        "resultTag": [...]
+    }
+}
 
 作者: Big Agent Team
 版本: 1.0.0
-创建时间: 2024-12-18
+创建时间: 2024-12-19
 """
 
 import os
@@ -48,12 +56,12 @@ from langchain_core.prompts import ChatPromptTemplate
 import re
 
 
-class MetricCalculationAgent:
-    """远程指标计算Agent"""
+class RulesEngineMetricCalculationAgent:
+    """规则引擎指标计算Agent"""
 
     def __init__(self, api_key: str, base_url: str = "https://api.deepseek.com"):
         """
-        初始化指标计算Agent
+        初始化规则引擎指标计算Agent
 
         Args:
             api_key: DeepSeek API密钥
@@ -84,73 +92,66 @@ class MetricCalculationAgent:
             for file in os.listdir(data_dir):
                 if file.endswith('.json'):
                     try:
-                        # 提取文件名中的关键词，用于匹配配置文件
-                        key = file.replace('原始数据-流水分析-', '').replace('.json', '')
+                        # 提取文件名，用于匹配配置文件
+                        key = file.replace('.json', '')
                         data_files[key] = os.path.join(data_dir, file)
                     except Exception as e:
                         print(f"处理数据文件 {file} 失败: {e}")
 
         return data_files
 
-    def _select_data_file(self, config_name: str) -> Optional[str]:
+    def _select_data_file(self, input_filename: str) -> Optional[str]:
         """
-        根据配置文件名选择对应的数据文件
+        根据输入文件名选择对应的数据文件
 
         Args:
-            config_name: 配置文件名
+            input_filename: 配置文件中的input字段值
 
         Returns:
             数据文件路径，如果找不到则返回None
         """
-        # 配置文件名模式：指标计算-{category}-{metric}.json
-        # 数据文件名模式：原始数据-流水分析-{category}原始数据.json
+        # input字段直接指定数据文件名
+        if input_filename in self.data_files:
+            return self.data_files[input_filename]
 
-        # 从配置文件名中提取类别信息
-        match = re.search(r'指标计算-(.+?)-', config_name)
-        if match:
-            category = match.group(1)
-            # 查找匹配的数据文件
-            for key, file_path in self.data_files.items():
-                if category in key:
-                    return file_path
-
-        # 如果找不到匹配的文件，返回默认的农业数据文件（如果存在）
-        if '农业' in self.data_files:
-            return self.data_files['农业']
+        # 如果找不到精确匹配，尝试模糊匹配
+        for key, file_path in self.data_files.items():
+            if input_filename in key or key in input_filename:
+                return file_path
 
         return None
 
-    def _load_table_data(self, data_file_path: str) -> List[Dict]:
-        """加载数据文件中的表格数据"""
+    def _load_table_data(self, data_file_path: str) -> Dict[str, Any]:
+        """加载数据文件中的JSON数据"""
         try:
             with open(data_file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                return data if isinstance(data, list) else []
+                return data if isinstance(data, dict) else {"resultTag": []}
         except Exception as e:
             print(f"加载数据文件 {data_file_path} 失败: {e}")
-            return []
+            return {"resultTag": []}
 
     def _load_configs(self) -> Dict[str, Dict]:
-        """加载所有配置文件"""
+        """加载所有规则引擎配置文件"""
         configs = {}
         json_dir = "json_files"
 
         if os.path.exists(json_dir):
             for file in os.listdir(json_dir):
-                if file.endswith('.json'):
+                if file.endswith('.json') and '规则引擎' in file:
                     try:
                         with open(os.path.join(json_dir, file), 'r', encoding='utf-8') as f:
                             config = json.load(f)
                             key = file.replace('.json', '')
                             configs[key] = config
                     except Exception as e:
-                        print(f"加载配置文件 {file} 失败: {e}")
+                        print(f"加载规则引擎配置文件 {file} 失败: {e}")
 
         return configs
 
     async def calculate_metrics(self, intent_result: Dict[str, Any]) -> Dict[str, Any]:
         """
-        根据意图识别结果进行指标计算
+        根据意图识别结果进行规则引擎指标计算
 
         Args:
             intent_result: 意图识别结果
@@ -172,7 +173,7 @@ class MetricCalculationAgent:
             for config_name in target_configs:
                 if config_name in self.configs:
                     config = self.configs[config_name]
-                    result = await self._call_metric_api(config, intent_result, config_name)
+                    result = await self._call_rules_engine_api(config, intent_result, config_name)
                     results.append({
                         "config_name": config_name,
                         "result": result
@@ -191,16 +192,16 @@ class MetricCalculationAgent:
             }
 
         except Exception as e:
-            print(f"指标计算失败: {e}")
+            print(f"规则引擎指标计算失败: {e}")
             return {
                 "success": False,
-                "message": f"指标计算过程中发生错误: {str(e)}",
+                "message": f"规则引擎指标计算过程中发生错误: {str(e)}",
                 "results": []
             }
 
-    async def _call_metric_api(self, config: Dict[str, Any], intent_result: Dict[str, Any], config_name: str) -> Dict[str, Any]:
+    async def _call_rules_engine_api(self, config: Dict[str, Any], intent_result: Dict[str, Any], config_name: str) -> Dict[str, Any]:
         """
-        调用具体的指标计算API
+        调用规则引擎API
 
         Args:
             config: 配置文件
@@ -213,9 +214,9 @@ class MetricCalculationAgent:
             # 记录API调用开始
             start_time = datetime.now()
 
-            # 使用真实API服务的配置
+            # 规则引擎API配置
             method = "POST"
-            url = "http://10.192.72.11:6300/api/data_analyst/full"  # 真实API服务地址
+            url = "http://localhost:8081/api/rules/executeKnowledge"
             headers = {
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -226,57 +227,36 @@ class MetricCalculationAgent:
             timeout = 180  # 3分钟超时
 
             # 准备请求数据
-            request_data = self._prepare_request_data(config, intent_result, config_name)
+            request_data = self._prepare_rules_engine_request_data(config, intent_result, config_name)
 
-            # 根据HTTP方法调用API
-            if method.upper() == "GET":
-                params = request_data.get("params", {})
-                response = requests.get(url, headers=headers, params=params, timeout=timeout)
-            elif method.upper() == "POST":
-                json_data = request_data.get("json", {})
-                response = requests.post(url, headers=headers, json=json_data, timeout=timeout)
-            else:
-                return {
-                    "success": False,
-                    "message": f"不支持的HTTP方法: {method}"
-                }
+            # 调用API
+            json_data = request_data.get("json", {})
+            response = requests.post(url, headers=headers, json=json_data, timeout=timeout)
 
             # 处理响应
             if response.status_code == 200:
                 try:
                     response_data = response.json()
 
-                    # 检查API响应结构并提取结果
-                    extracted_result = None
-                    if isinstance(response_data, dict):
-                        # 检查是否有code字段和data.result结构
-                        if response_data.get("code") == 0 and "data" in response_data:
-                            data = response_data["data"]
-                            if "result" in data:
-                                # 从result字段中提取JSON
-                                extracted_result = self._extract_json_from_result(data["result"])
-
                     # 记录API调用结果
                     end_time = datetime.now()
-                    call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+                    call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
                     api_call_info = {
                         "call_id": call_id,
                         "timestamp": end_time.isoformat(),
-                        "agent": "MetricCalculationAgent",
+                        "agent": "RulesEngineMetricCalculationAgent",
                         "api_endpoint": url,
                         "config_name": config_name,
                         "request": {
                             "method": method,
                             "url": url,
                             "headers": headers,
-                            "json_data": json_data if method.upper() == "POST" else None,
-                            "params": params if method.upper() == "GET" else None,
+                            "json_data": json_data,
                             "start_time": start_time.isoformat()
                         },
                         "response": {
                             "status_code": response.status_code,
                             "data": response_data,
-                            "extracted_result": extracted_result,
                             "end_time": end_time.isoformat(),
                             "duration": (end_time - start_time).total_seconds()
                         },
@@ -293,32 +273,30 @@ class MetricCalculationAgent:
                     try:
                         with open(filepath, 'w', encoding='utf-8') as f:
                             json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                        print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                        print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
                     except Exception as e:
-                        print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+                        print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
 
                     return {
                         "success": True,
                         "data": response_data,
-                        "extracted_result": extracted_result,
                         "status_code": response.status_code
                     }
                 except json.JSONDecodeError:
                     # 记录API调用结果（JSON解析失败）
                     end_time = datetime.now()
-                    call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+                    call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
                     api_call_info = {
                         "call_id": call_id,
                         "timestamp": end_time.isoformat(),
-                        "agent": "MetricCalculationAgent",
+                        "agent": "RulesEngineMetricCalculationAgent",
                         "api_endpoint": url,
                         "config_name": config_name,
                         "request": {
                             "method": method,
                             "url": url,
                             "headers": headers,
-                            "json_data": json_data if method.upper() == "POST" else None,
-                            "params": params if method.upper() == "GET" else None,
+                            "json_data": json_data,
                             "start_time": start_time.isoformat()
                         },
                         "response": {
@@ -341,32 +319,30 @@ class MetricCalculationAgent:
                     try:
                         with open(filepath, 'w', encoding='utf-8') as f:
                             json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                        print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                        print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
                     except Exception as e:
-                        print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+                        print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
 
                     return {
                         "success": True,
                         "data": response.text,
-                        "extracted_result": None,
                         "status_code": response.status_code
                     }
             else:
                 # 记录API调用结果（HTTP错误）
                 end_time = datetime.now()
-                call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+                call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
                 api_call_info = {
                     "call_id": call_id,
                     "timestamp": end_time.isoformat(),
-                    "agent": "MetricCalculationAgent",
+                    "agent": "RulesEngineMetricCalculationAgent",
                     "api_endpoint": url,
                     "config_name": config_name,
                     "request": {
                         "method": method,
                         "url": url,
                         "headers": headers,
-                        "json_data": json_data if method.upper() == "POST" else None,
-                        "params": params if method.upper() == "GET" else None,
+                        "json_data": json_data,
                         "start_time": start_time.isoformat()
                     },
                     "response": {
@@ -388,32 +364,31 @@ class MetricCalculationAgent:
                 try:
                     with open(filepath, 'w', encoding='utf-8') as f:
                         json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                    print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                    print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
                 except Exception as e:
-                    print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+                    print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
 
                 return {
                     "success": False,
-                    "message": f"API调用失败，状态码: {response.status_code}",
+                    "message": f"规则引擎API调用失败，状态码: {response.status_code}",
                     "response": response.text
                 }
 
         except requests.exceptions.Timeout:
             # 记录API调用结果（超时）
             end_time = datetime.now()
-            call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+            call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
             api_call_info = {
                 "call_id": call_id,
                 "timestamp": end_time.isoformat(),
-                "agent": "MetricCalculationAgent",
+                "agent": "RulesEngineMetricCalculationAgent",
                 "api_endpoint": url,
                 "config_name": config_name,
                 "request": {
                     "method": method,
                     "url": url,
                     "headers": headers,
-                    "json_data": json_data if method.upper() == "POST" else None,
-                    "params": params if method.upper() == "GET" else None,
+                    "json_data": json_data if 'json_data' in locals() else None,
                     "start_time": start_time.isoformat()
                 },
                 "response": {
@@ -425,39 +400,25 @@ class MetricCalculationAgent:
             }
             self.api_calls.append(api_call_info)
 
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[API_RESULT] 保存API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
             return {
                 "success": False,
-                "message": "API调用超时"
+                "message": "规则引擎API调用超时"
             }
         except requests.exceptions.RequestException as e:
             # 记录API调用结果（请求异常）
             end_time = datetime.now()
-            call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+            call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
             api_call_info = {
                 "call_id": call_id,
                 "timestamp": end_time.isoformat(),
-                "agent": "MetricCalculationAgent",
+                "agent": "RulesEngineMetricCalculationAgent",
                 "api_endpoint": url,
                 "config_name": config_name,
                 "request": {
                     "method": method,
                     "url": url,
                     "headers": headers,
-                    "json_data": json_data if method.upper() == "POST" else None,
-                    "params": params if method.upper() == "GET" else None,
+                    "json_data": json_data if 'json_data' in locals() else None,
                     "start_time": start_time.isoformat()
                 },
                 "response": {
@@ -469,39 +430,25 @@ class MetricCalculationAgent:
             }
             self.api_calls.append(api_call_info)
 
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[API_RESULT] 保存API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
             return {
                 "success": False,
-                "message": f"API调用异常: {str(e)}"
+                "message": f"规则引擎API调用异常: {str(e)}"
             }
         except Exception as e:
             # 记录API调用结果（其他异常）
             end_time = datetime.now()
-            call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+            call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
             api_call_info = {
                 "call_id": call_id,
                 "timestamp": end_time.isoformat(),
-                "agent": "MetricCalculationAgent",
+                "agent": "RulesEngineMetricCalculationAgent",
                 "api_endpoint": url,
                 "config_name": config_name,
                 "request": {
                     "method": method,
                     "url": url,
                     "headers": headers,
-                    "json_data": json_data if method.upper() == "POST" else None,
-                    "params": params if method.upper() == "GET" else None,
+                    "json_data": json_data if 'json_data' in locals() else None,
                     "start_time": start_time.isoformat()
                 },
                 "response": {
@@ -513,27 +460,14 @@ class MetricCalculationAgent:
             }
             self.api_calls.append(api_call_info)
 
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[API_RESULT] 保存API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
             return {
                 "success": False,
-                "message": f"处理API调用时发生错误: {str(e)}"
+                "message": f"处理规则引擎API调用时发生错误: {str(e)}"
             }
 
-    def _prepare_request_data(self, config: Dict[str, Any], intent_result: Dict[str, Any], config_name: str) -> Dict[str, Any]:
+    def _prepare_rules_engine_request_data(self, config: Dict[str, Any], intent_result: Dict[str, Any], config_name: str) -> Dict[str, Any]:
         """
-        准备API请求数据
+        准备规则引擎API请求数据
 
         Args:
             config: 配置文件
@@ -543,79 +477,29 @@ class MetricCalculationAgent:
         Returns:
             请求数据
         """
-        # 从配置文件中获取question和prompt
-        question = config.get("question", "")
-        prompt = config.get("prompt", "")
+        # 从配置文件中获取id和input
+        request_id = config.get("id", "")
+        input_filename = config.get("input", "")
 
-        # 选择对应的数据文件
-        data_file_path = self._select_data_file(config_name)
-        table_data = []
-
-        if data_file_path:
-            table_data = self._load_table_data(data_file_path)
-        else:
-            print(f"警告：找不到配置文件 {config_name} 对应的数据文件")
-
-        # 构造documents数组
-        documents = []
-        if table_data:
-            # 使用数据文件名作为标题
-            title = f"数据表-{config_name}"
+        # 加载对应的数据文件
+        input_data = {}
+        if input_filename:
+            data_file_path = self._select_data_file(input_filename)
             if data_file_path:
-                title = os.path.basename(data_file_path).replace('.json', '')
-
-            documents.append({
-                "id": 1,
-                "title": title,
-                "text": "",
-                "table": table_data
-            })
+                input_data = self._load_table_data(data_file_path)
+            else:
+                print(f"警告：找不到配置文件 {config_name} 对应的数据文件: {input_filename}")
 
         # 构造API请求体
         request_data = {
-            "disable_planning": False,
-            "question": question,
-            "prompt": prompt,
-            "documents": documents
+            "id": request_id,
+            "input": input_data
         }
 
         return {"json": request_data}
 
-    def _extract_json_from_result(self, result_text: str) -> Dict[str, Any]:
-        """
-        从API结果文本中提取JSON内容
-
-        Args:
-            result_text: API返回的result字段内容
-
-        Returns:
-            提取的JSON对象
-        """
-        import re
-        import json
-
-        try:
-            # 查找```json和```之间的内容
-            json_match = re.search(r'```json\s*(.*?)\s*```', result_text, re.DOTALL)
-            if json_match:
-                json_str = json_match.group(1).strip()
-                return json.loads(json_str)
-
-            # 如果没有```json标记，查找大括号包围的内容
-            brace_match = re.search(r'\{.*\}', result_text, re.DOTALL)
-            if brace_match:
-                json_str = brace_match.group(0).strip()
-                return json.loads(json_str)
-
-            # 如果都找不到，尝试直接解析整个文本
-            return json.loads(result_text.strip())
-
-        except json.JSONDecodeError as e:
-            print(f"JSON解析失败: {e}")
-            return {"error": f"无法解析JSON结果: {str(e)}", "raw_result": result_text}
-
     def get_available_configs(self) -> List[str]:
-        """获取所有可用的配置文件名"""
+        """获取所有可用的规则引擎配置文件名"""
         return list(self.configs.keys())
 
     def get_config_details(self, config_name: str) -> Optional[Dict]:

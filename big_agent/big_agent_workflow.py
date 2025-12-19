@@ -48,6 +48,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 # Big Agent 各模块导入
 from agents.intent_recognition_agent import IntentRecognitionAgent
 from agents.metric_calculation_agent import MetricCalculationAgent
+from agents.rules_engine_metric_calculation_agent import RulesEngineMetricCalculationAgent
 from agents.knowledge_precipitation_agent import KnowledgePrecipitationAgent
 
 
@@ -61,6 +62,7 @@ class WorkflowState(TypedDict):
     errors: List[str]
     start_time: str
     end_time: Optional[str]
+    api_result: Dict[str, Any]  # 存储所有API调用结果
 
 
 class BigAgentWorkflow:
@@ -80,6 +82,7 @@ class BigAgentWorkflow:
         # 初始化各个Agent
         self.intent_agent = IntentRecognitionAgent(deepseek_api_key, base_url)
         self.calculation_agent = MetricCalculationAgent(deepseek_api_key, base_url)
+        self.rules_engine_agent = RulesEngineMetricCalculationAgent(deepseek_api_key, base_url)
         self.knowledge_agent = KnowledgePrecipitationAgent(deepseek_api_key, base_url)
 
         # 创建工作流图
@@ -131,6 +134,10 @@ class BigAgentWorkflow:
             # 执行意图识别
             intent_result = await self.intent_agent.recognize_intent(new_state["user_input"])
 
+            # 将API调用结果保存到api_result
+            for api_call in self.intent_agent.api_calls:
+                new_state["api_result"][api_call["call_id"]] = api_call
+
             # 添加AI响应到对话历史
             new_state["messages"] = new_state["messages"] + [{
                 "role": "assistant",
@@ -167,8 +174,24 @@ class BigAgentWorkflow:
             if not intent_result:
                 raise ValueError("没有意图识别结果")
 
-            # 执行指标计算
-            calculation_results = await self.calculation_agent.calculate_metrics(intent_result)
+            # 根据计算模式选择对应的Agent
+            calculation_mode = intent_result.get("calculation_mode", "standard")
+            print(f"使用计算模式: {calculation_mode}")
+
+            if calculation_mode == "rules_engine":
+                # 使用规则引擎计算Agent
+                calculation_results = await self.rules_engine_agent.calculate_metrics(intent_result)
+                api_calls_source = self.rules_engine_agent.api_calls
+                agent_name = "规则引擎指标计算"
+            else:
+                # 使用标准指标计算Agent
+                calculation_results = await self.calculation_agent.calculate_metrics(intent_result)
+                api_calls_source = self.calculation_agent.api_calls
+                agent_name = "标准指标计算"
+
+            # 将API调用结果保存到api_result
+            for api_call in api_calls_source:
+                new_state["api_result"][api_call["call_id"]] = api_call
 
             # 添加到对话历史
             successful_count = calculation_results.get("successful_calculations", 0)
@@ -176,14 +199,14 @@ class BigAgentWorkflow:
 
             new_state["messages"] = new_state["messages"] + [{
                 "role": "assistant",
-                "content": f"指标计算完成：成功 {successful_count}/{total_count} 个配置",
+                "content": f"{agent_name}完成：成功 {successful_count}/{total_count} 个配置",
                 "timestamp": datetime.now().isoformat()
             }]
 
             # 更新状态
             new_state["calculation_results"] = calculation_results
 
-            print(f"指标计算完成：{successful_count}/{total_count} 成功")
+            print(f"{agent_name}完成：{successful_count}/{total_count} 成功")
 
             return new_state
 
@@ -215,6 +238,10 @@ class BigAgentWorkflow:
 
             # 执行知识沉淀
             knowledge_result = await self.knowledge_agent.precipitate_knowledge(workflow_data)
+
+            # 将API调用结果保存到api_result
+            for api_call in self.knowledge_agent.api_calls:
+                new_state["api_result"][api_call["call_id"]] = api_call
 
             # 添加到对话历史
             new_state["messages"] = new_state["messages"] + [{
@@ -315,7 +342,8 @@ class BigAgentWorkflow:
                 "messages": [],
                 "errors": [],
                 "start_time": datetime.now().isoformat(),
-                "end_time": None
+                "end_time": None,
+                "api_result": {}
             }
 
             # 编译并运行工作流
@@ -361,7 +389,10 @@ class BigAgentWorkflow:
     def get_workflow_status(self) -> Dict[str, Any]:
         """获取工作流状态信息"""
         return {
-            "available_configs": self.calculation_agent.get_available_configs(),
+            "available_configs": {
+                "standard": self.calculation_agent.get_available_configs(),
+                "rules_engine": self.rules_engine_agent.get_available_configs()
+            },
             "knowledge_stats": self.knowledge_agent.get_knowledge_stats(),
             "workflow_nodes": ["intent_recognition", "metric_calculation", "knowledge_precipitation"]
         }

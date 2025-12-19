@@ -35,6 +35,7 @@
 import os
 import json
 import logging
+from datetime import datetime
 from typing import Dict, List, Any, Optional
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -68,10 +69,13 @@ class IntentRecognitionAgent:
         # 获取可用的指标配置文件
         self.available_configs = self._load_available_configs()
 
+        # 初始化API调用跟踪
+        self.api_calls = []
+
     def _load_available_configs(self) -> Dict[str, Dict]:
         """加载可用的指标配置文件"""
         configs = {}
-        json_dir = "jsonFiles"
+        json_dir = "json_files"
 
         if os.path.exists(json_dir):
             for file in os.listdir(json_dir):
@@ -99,14 +103,20 @@ class IntentRecognitionAgent:
 1. 判断输入类型（纯语言描述或包含CSV数据）
 2. 分析用户想要计算什么类型的指标
 3. 从可用的配置文件中选择最相关的指标计算文件
-4. 提取关键信息和参数
+4. 判断使用哪种计算模式：普通指标计算或规则引擎计算
+5. 提取关键信息和参数
 
 可用配置文件：
 {available_configs}
 
+计算模式说明：
+- 普通指标计算：使用标准API接口，配置文件名不包含"规则引擎"
+- 规则引擎计算：使用规则引擎API接口，配置文件名包含"规则引擎"
+
 请以JSON格式返回以下信息：
 - input_type: "text_only" 或 "text_with_csv"
 - intent_category: 用户意图的类别（如"农业"、"经济"等）
+- calculation_mode: "standard" 或 "rules_engine"（计算模式）
 - target_configs: 数组，包含需要调用的配置文件名（不含.json后缀）
 - key_parameters: 对象，包含提取的关键参数
 - confidence: 置信度（0-1之间）
@@ -167,15 +177,57 @@ User input: {user_input}"""
             logger.info("========================================")
 
             # 执行推理
+            start_time = datetime.now()
             result = await chain.ainvoke({
                 "available_configs": configs_info,
                 "user_input": user_input
             })
+            end_time = datetime.now()
+
+            # 记录API调用结果
+            call_id = f"api_mll_{len(self.api_calls) + 1}"
+            api_call_info = {
+                "call_id": call_id,
+                "timestamp": end_time.isoformat(),
+                "agent": "IntentRecognitionAgent",
+                "model": "deepseek-chat",
+                "request": {
+                    "prompt": full_prompt,
+                    "start_time": start_time.isoformat()
+                },
+                "response": {
+                    "result": result,
+                    "end_time": end_time.isoformat(),
+                    "duration": (end_time - start_time).total_seconds()
+                },
+                "success": True
+            }
+            self.api_calls.append(api_call_info)
+
+            # 保存API结果到文件
+            api_results_dir = "api_results"
+            os.makedirs(api_results_dir, exist_ok=True)
+            filename = f"{call_id}.json"
+            filepath = os.path.join(api_results_dir, filename)
+
+            try:
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                logger.info(f"[API_RESULT] 保存API结果文件: {filepath}")
+            except Exception as e:
+                logger.error(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
 
             # 记录大模型输出
             logger.info(f"[MODEL_OUTPUT] IntentRecognitionAgent: {json.dumps(result, ensure_ascii=False)}")
             logger.info(f"[RESULT] 识别出 {len(result.get('target_configs', []))} 个目标配置")
             logger.info("========================================")
+
+            # 确保返回calculation_mode字段
+            if "calculation_mode" not in result:
+                # 根据target_configs中的文件名判断计算模式
+                target_configs = result.get("target_configs", [])
+                has_rules_engine = any("规则引擎" in config for config in target_configs)
+                result["calculation_mode"] = "rules_engine" if has_rules_engine else "standard"
 
             # 添加CSV数据信息
             result["has_csv_data"] = csv_data is not None
@@ -189,6 +241,7 @@ User input: {user_input}"""
             return {
                 "input_type": "text_only",
                 "intent_category": "unknown",
+                "calculation_mode": "standard",
                 "target_configs": [],
                 "key_parameters": {},
                 "confidence": 0.0,

@@ -219,7 +219,7 @@ async def main():
     print()
     print("使用提示:")
     print("1. 设置有效的 DEEPSEEK_API_KEY 以获得完整功能")
-    print("2. 修改 jsonFiles/ 下的配置文件以添加新的指标计算")
+    print("2. 修改 json_files/ 下的配置文件以添加新的指标计算")
     print("3. 查看 knowledge_base/ 目录中的知识文档")
     print("4. 运行 python test_big_agent.py 进行系统测试")
 

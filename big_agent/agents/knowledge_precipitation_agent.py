@@ -83,6 +83,9 @@ class KnowledgePrecipitationAgent:
         self.knowledge_base_path = "knowledge_base"
         os.makedirs(self.knowledge_base_path, exist_ok=True)
 
+        # 初始化API调用跟踪
+        self.api_calls = []
+
     async def precipitate_knowledge(self, workflow_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         从工作流数据中沉淀知识
@@ -203,12 +206,47 @@ class KnowledgePrecipitationAgent:
             logger.info("========================================")
 
             # 生成知识文档
+            start_time = datetime.now()
             chain = prompt | self.llm
 
             response = await chain.ainvoke(input_data)
+            end_time = datetime.now()
 
             # 解析响应
             content = response.content if hasattr(response, 'content') else str(response)
+
+            # 记录API调用结果
+            call_id = f"api_mll_{len(self.api_calls) + 2}"
+            api_call_info = {
+                "call_id": call_id,
+                "timestamp": end_time.isoformat(),
+                "agent": "KnowledgePrecipitationAgent",
+                "model": "deepseek-chat",
+                "request": {
+                    "input_data": input_data,
+                    "start_time": start_time.isoformat()
+                },
+                "response": {
+                    "content": content,
+                    "end_time": end_time.isoformat(),
+                    "duration": (end_time - start_time).total_seconds()
+                },
+                "success": True
+            }
+            self.api_calls.append(api_call_info)
+
+            # 保存API结果到文件
+            api_results_dir = "api_results"
+            os.makedirs(api_results_dir, exist_ok=True)
+            filename = f"{call_id}.json"
+            filepath = os.path.join(api_results_dir, filename)
+
+            try:
+                with open(filepath, 'w', encoding='utf-8') as f:
+                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                logger.info(f"[API_RESULT] 保存API结果文件: {filepath}")
+            except Exception as e:
+                logger.error(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
 
             # 记录大模型输出
             logger.info(f"[MODEL_OUTPUT] KnowledgePrecipitationAgent: {content}")
