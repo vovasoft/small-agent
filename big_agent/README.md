@@ -70,7 +70,7 @@ big_agent/
 │   └── 农业总收入指标计算.json
 ├── knowledge_base/                 # 知识库存储目录
 ├── config.py                       # 配置文件
-├── big_agent_workflow.py          # 主工作流
+├── complete_agent_flow.py         # 主工作流
 ├── test_big_agent.py              # 测试脚本
 └── README.md                      # 说明文档
 ```
@@ -114,14 +114,20 @@ python -m pytest tests/ --asyncio-mode=auto -v
 
 ```python
 import asyncio
-from big_agent_workflow import run_big_agent
+from complete_agent_flow import run_complete_agent_flow
 
 # 设置API密钥
 api_key = "your_deepseek_api_key"
 
+# 准备数据
+data = [
+    {"field1": "value1", "field2": "value2"},
+    # ... 更多数据
+]
+
 # 运行工作流
 async def main():
-    result = await run_big_agent("我想计算农业的相关指标情况", api_key)
+    result = await run_complete_agent_flow("生成农业指标分析报告", data, api_key)
     print(result)
 
 asyncio.run(main())
@@ -245,7 +251,7 @@ curl -X POST "http://localhost:8000/agriculture/income-calculation" \
 
 ### 添加新的工作流节点
 
-在 `big_agent_workflow.py` 中：
+在 `complete_agent_flow.py` 中：
 
 1. 定义新的节点函数
 2. 在工作流图中添加节点

@@ -1,0 +1,73 @@
+{
+  "title": "用户查询知识沉淀 - 20251220_100818",
+  "summary": "```json\n{\n  \"title\": \"黑色金属总经营收入计算错误分析与知识总结\",\n  \"summary\": \"用户请求计算黑色金属总经营收入，系统识别意图后执行指标计算，但在API调用过程中因数据类型不匹配导致计算失败。本次查询揭示了数据处理流程中存在的类型转换问题。\",\n  \"key_findings\": [\n    \"意图识别成功：系统准确识别用户查询属于'黑色金属'类别，目标配置为'指标计算-黑色金属-总经营收入'\",\n    \"计算流程异常：指标计算配置执行时发生API调用错误，错误类型为数据类型转换异常\",\n    \"错误详情：系统尝试将datetime.timedelta对象转换为整数时失败，表明数据源或中间处理环节存在类型不一致问题\",\n    \"执行统计：共处理1个配置，成功计算1次（指流程执行成功，但结果失败）\"\n  ],\n  \"patterns_identified\": [\n    \"指标计算类查询通常遵循'意图识别→配置匹配→API调用→结果返回'的标准流程\",\n    \"数据类型错误常发生在跨系统数据交互环节，特别是时间相关数据的处理\",\n    \"错误消息格式显示系统具有明确的错误捕获和结构化返回能力\"\n  ],\n  \"prompts_extracted\": [\n    \"计算[行业/品类]总经营收入\",\n    \"指标计算-[行业]-[指标名称]\",\n    \"处理API调用时发生错误：[具体错误描述]\"\n  ],\n  \"keywords\": [\n    \"黑色金属\",\n    \"总经营收入\",\n    \"指标计算\",\n    \"API调用错误\",\n    \"数据类型转换\",\n    \"datetime.timedelta\",\n    \"配置执行\"\n  ],\n  \"recommendations\": [\n    \"在数据预处理阶段增加类型检查和转换验证，特别是对时间差、日期时间等特殊类型\",\n    \"建立数据类型映射表，明确各数据源字段的预期类型和转换规则\",\n    \"在API调用前添加数据清洗步骤，对timedelta等特殊类型进行预处理\",\n    \"完善错误处理机制，提供更友好的错误提示和修复建议\",\n    \"考虑在配置文件中定义数据类型的预期格式和转换方法\"\n  ],\n  \"lessons_learned\": [\n    \"跨系统数据集成时，数据类型一致性是常见故障点，需要建立严格的类型管理规范\",\n    \"错误消息中的'datetime.timedelta'提示数据源可能返回了时间间隔数据而非数值数据\",\n    \"即使计算失败，系统仍能返回结构化的错误信息，这有助于问题诊断和流程改进\",\n    \"指标计算类服务的健壮性不仅取决于计算逻辑，更依赖于数据输入的质量和一致性\"\n  ]\n}\n```",
+  "generated_at": "2025-12-20T10:08:18.268709",
+  "type": "text_document",
+  "metadata": {
+    "created_at": "2025-12-20T10:07:57.935066",
+    "source": "big_agent_workflow",
+    "version": "1.0"
+  },
+  "raw_data": {
+    "timestamp": "2025-12-20T10:07:57.935066",
+    "user_input": "请计算黑色金属总经营收入",
+    "intent_recognition": {
+      "input_type": "text_only",
+      "intent_category": "黑色金属",
+      "calculation_mode": "standard",
+      "target_configs": [
+        "指标计算-黑色金属-总经营收入"
+      ],
+      "key_parameters": {
+        "行业": "黑色金属",
+        "指标类型": "总经营收入",
+        "业务场景": "经营贷流水分析"
+      },
+      "confidence": 0.95,
+      "has_csv_data": false,
+      "csv_data": null
+    },
+    "metric_calculations": {
+      "success": true,
+      "results": [
+        {
+          "config_name": "指标计算-黑色金属-总经营收入",
+          "result": {
+            "success": false,
+            "message": "处理API调用时发生错误: int() argument must be a string, a bytes-like object or a real number, not 'datetime.timedelta'"
+          }
+        }
+      ],
+      "total_configs": 1,
+      "successful_calculations": 1
+    },
+    "conversation_flow": [
+      {
+        "role": "user",
+        "content": "请计算黑色金属总经营收入",
+        "timestamp": "2025-12-20T10:07:05.790945"
+      },
+      {
+        "role": "assistant",
+        "content": "意图识别完成：类别-黑色金属，置信度-0.95",
+        "timestamp": "2025-12-20T10:07:10.245111"
+      },
+      {
+        "role": "assistant",
+        "content": "标准指标计算完成：成功 1/1 个配置",
+        "timestamp": "2025-12-20T10:07:57.934603"
+      }
+    ],
+    "key_insights": [],
+    "prompts_used": [],
+    "api_calls": [
+      {
+        "config_name": "指标计算-黑色金属-总经营收入",
+        "success": false,
+        "status_code": null,
+        "response_size": 0
+      }
+    ],
+    "errors": []
+  }
+}

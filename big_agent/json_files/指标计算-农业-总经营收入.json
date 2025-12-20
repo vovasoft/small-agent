@@ -1,5 +1,5 @@
 {
     "description": "因子概述：针对办理经营贷业务，且客户所属行业为农业的流水分析指标计算环节，可通过该知识因子对其中总经营收入进行计算",
-"question": "计算农业交易对手经营收入top5：\n1. 交易方向(txDirection)必须为\"收入\"。\n2. 交易摘要(txSummary)必须同时满足以下两点：   - 包含水稻 or 蔬菜 or 出栏 or 中药材 or 农资 or 农产品（例如：\"蔬菜收入\"）。   - 包含销售 or 收入 or 返利 or 服务费 or 零收款（例如：\"农资收入\"），之后对公司进行分组计算算出总输入，然后进行排序得出一个列表，列表中是总收入和公司名，返回结构用标准的JSON结构，样例如下：{sortResult: [{totalIncome: xxx, txCounterparty: xxxx}, {totalIncome: xxx, txCounterparty: xxxx}]}",
-"prompt": "相关数据中金额的单位为万元，输出时无须转换"
+"question": "计算农业相关的销售收入总额。具体筛选条件如下：\n1. 交易方向(`txDirection`)必须为“收入”。\n2. 交易摘要(`txSummary`)必须同时满足以下两点：\n   - 包含水稻 or 蔬菜 or 出栏 or 中药材 or 农资 or 农产品（例如：“蔬菜收入”）。\n   - 包含销售 or 收入 or 返利 or 服务费 or 零收款（例如：“农资收入”）。\n请输出JSON格式的结果，包含总收入(`totalIncome`)，金额单位为万元，保留两位小数。若无符合条件的记录，总收入为0.00。\n输出示例：{\"totalIncome\": 4424.50}",
+"prompt": "相关数据输出时无须转换单位"
 }

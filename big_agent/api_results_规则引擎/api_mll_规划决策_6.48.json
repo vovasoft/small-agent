@@ -1,0 +1,29 @@
+{
+  "call_id": "api_mll_规划决策_6.48",
+  "timestamp": "2025-12-20T14:49:05.198404",
+  "agent": "PlanningAgent",
+  "model": "deepseek-chat",
+  "request": {
+    "question": "执行流水分析任务",
+    "status_info": "当前状态评估：\n- 规划步骤: 0\n- 大纲版本: 0\n- 大纲草稿存在: False\n- 指标需求总数: 0\n- 已计算指标数: 0\n- 指标覆盖率: 0.00%\n- 待计算指标数: 0\n- 有效待计算指标数: 0\n- 失败尝试记录: {}\n\n建议下一步: 计算指标",
+    "start_time": "2025-12-20T14:48:58.714345"
+  },
+  "response": {
+    "content": "```json\n{\n    \"decision\": \"generate_outline\",\n    \"reasoning\": \"大纲草稿不存在（outline_draft存在性为False），且指标需求总数为0，表明尚未生成报告大纲。根据决策规则，当大纲未生成或无效时，应选择generate_outline。\",\n    \"next_actions\": [\"生成报告大纲，明确分析维度、指标需求和报告结构\"],\n    \"metrics_to_compute\": [],\n    \"priority_metrics\": [],\n    \"additional_requirements\": \"用户需求为'执行流水分析任务'，较为宽泛。建议在生成大纲前，可进一步明确分析范围（如特定业务板块、时间周期、关键分析维度等），但当前状态满足首先生成大纲的条件。\"\n}\n```",
+    "decision": {
+      "decision": "generate_outline",
+      "reasoning": "大纲草稿不存在（outline_draft存在性为False），且指标需求总数为0，表明尚未生成报告大纲。根据决策规则，当大纲未生成或无效时，应选择generate_outline。",
+      "next_actions": [
+        "生成报告大纲，明确分析维度、指标需求和报告结构"
+      ],
+      "metrics_to_compute": [],
+      "priority_metrics": [],
+      "additional_requirements": {
+        "raw_content": "用户需求为'执行流水分析任务'，较为宽泛。建议在生成大纲前，可进一步明确分析范围（如特定业务板块、时间周期、关键分析维度等），但当前状态满足首先生成大纲的条件。"
+      }
+    },
+    "end_time": "2025-12-20T14:49:05.198404",
+    "duration": 6.484059
+  },
+  "success": true
+}

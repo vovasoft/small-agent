@@ -216,7 +216,7 @@ class RulesEngineMetricCalculationAgent:
 
             # 规则引擎API配置
             method = "POST"
-            url = "http://localhost:8081/api/rules/executeKnowledge"
+            url = "http://10.192.72.11:31809/api/rules/executeKnowledge"
             headers = {
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -240,7 +240,7 @@ class RulesEngineMetricCalculationAgent:
 
                     # 记录API调用结果
                     end_time = datetime.now()
-                    call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
+                    call_id = f"rules_api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
                     api_call_info = {
                         "call_id": call_id,
                         "timestamp": end_time.isoformat(),
@@ -285,7 +285,7 @@ class RulesEngineMetricCalculationAgent:
                 except json.JSONDecodeError:
                     # 记录API调用结果（JSON解析失败）
                     end_time = datetime.now()
-                    call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
+                    call_id = f"rules_api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
                     api_call_info = {
                         "call_id": call_id,
                         "timestamp": end_time.isoformat(),
@@ -331,7 +331,7 @@ class RulesEngineMetricCalculationAgent:
             else:
                 # 记录API调用结果（HTTP错误）
                 end_time = datetime.now()
-                call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
+                call_id = f"rules_api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
                 api_call_info = {
                     "call_id": call_id,
                     "timestamp": end_time.isoformat(),
@@ -377,7 +377,7 @@ class RulesEngineMetricCalculationAgent:
         except requests.exceptions.Timeout:
             # 记录API调用结果（超时）
             end_time = datetime.now()
-            call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
+            call_id = f"rules_api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
             api_call_info = {
                 "call_id": call_id,
                 "timestamp": end_time.isoformat(),
@@ -407,7 +407,7 @@ class RulesEngineMetricCalculationAgent:
         except requests.exceptions.RequestException as e:
             # 记录API调用结果（请求异常）
             end_time = datetime.now()
-            call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
+            call_id = f"rules_api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
             api_call_info = {
                 "call_id": call_id,
                 "timestamp": end_time.isoformat(),
@@ -437,7 +437,7 @@ class RulesEngineMetricCalculationAgent:
         except Exception as e:
             # 记录API调用结果（其他异常）
             end_time = datetime.now()
-            call_id = f"rules_api_{config_name}_{int(end_time.timestamp())}"
+            call_id = f"rules_api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
             api_call_info = {
                 "call_id": call_id,
                 "timestamp": end_time.isoformat(),

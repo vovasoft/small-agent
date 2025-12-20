@@ -103,18 +103,26 @@ class MetricCalculationAgent:
             数据文件路径，如果找不到则返回None
         """
         # 配置文件名模式：指标计算-{category}-{metric}.json
-        # 数据文件名模式：原始数据-流水分析-{category}原始数据.json
+        # 数据文件名模式：原始数据-流水分析-{category}.json
 
         # 从配置文件名中提取类别信息
         match = re.search(r'指标计算-(.+?)-', config_name)
         if match:
             category = match.group(1)
-            # 查找匹配的数据文件
-            for key, file_path in self.data_files.items():
-                if category in key:
+
+            # 优先选择原始数据文件
+            # 1. 首先查找完全匹配的原始数据文件
+            if category in self.data_files:
+                file_path = self.data_files[category]
+                if '原始数据' in file_path:
                     return file_path
 
-        # 如果找不到匹配的文件，返回默认的农业数据文件（如果存在）
+            # 2. 如果没有完全匹配，查找包含类别的原始数据文件
+            for key, file_path in self.data_files.items():
+                if category in key and '原始数据' in file_path:
+                    return file_path
+
+        # 如果找不到匹配的文件，返回默认的农业原始数据文件（如果存在）
         if '农业' in self.data_files:
             return self.data_files['农业']
 
@@ -223,42 +231,196 @@ class MetricCalculationAgent:
                 "Content-Type": "application/json",
                 "User-Agent": "PostmanRuntime-ApipostRuntime/1.1.0"
             }
-            timeout = 180  # 3分钟超时
+            timeout = 600  # 10分钟超时，给慢API更多时间
 
-            # 准备请求数据
-            request_data = self._prepare_request_data(config, intent_result, config_name)
+            # 添加重试机制，最多重试3次
+            max_retries = 3
+            retry_delay = 5  # 每次重试间隔5秒
 
-            # 根据HTTP方法调用API
-            if method.upper() == "GET":
-                params = request_data.get("params", {})
-                response = requests.get(url, headers=headers, params=params, timeout=timeout)
-            elif method.upper() == "POST":
-                json_data = request_data.get("json", {})
-                response = requests.post(url, headers=headers, json=json_data, timeout=timeout)
-            else:
-                return {
-                    "success": False,
-                    "message": f"不支持的HTTP方法: {method}"
-                }
-
-            # 处理响应
-            if response.status_code == 200:
+            for attempt in range(max_retries):
                 try:
-                    response_data = response.json()
+                    print(f"🔄 API调用尝试 {attempt + 1}/{max_retries} (配置: {config_name})")
 
-                    # 检查API响应结构并提取结果
-                    extracted_result = None
-                    if isinstance(response_data, dict):
-                        # 检查是否有code字段和data.result结构
-                        if response_data.get("code") == 0 and "data" in response_data:
-                            data = response_data["data"]
-                            if "result" in data:
-                                # 从result字段中提取JSON
-                                extracted_result = self._extract_json_from_result(data["result"])
+                    # 准备请求数据
+                    request_data = self._prepare_request_data(config, intent_result, config_name)
 
-                    # 记录API调用结果
+                    # 根据HTTP方法调用API
+                    if method.upper() == "GET":
+                        params = request_data.get("params", {})
+                        response = requests.get(url, headers=headers, params=params, timeout=timeout)
+                    elif method.upper() == "POST":
+                        json_data = request_data.get("json", {})
+                        response = requests.post(url, headers=headers, json=json_data, timeout=timeout)
+                    else:
+                        return {
+                            "success": False,
+                            "message": f"不支持的HTTP方法: {method}"
+                        }
+
+                    # 处理响应
+                    if response.status_code == 200:
+                        try:
+                            response_data = response.json()
+
+                            # 检查API响应结构并提取结果
+                            extracted_result = None
+                            if isinstance(response_data, dict):
+                                # 检查是否有code字段和data.result结构
+                                if response_data.get("code") == 0 and "data" in response_data:
+                                    data = response_data["data"]
+                                    if "result" in data:
+                                        # 从result字段中提取JSON
+                                        extracted_result = self._extract_json_from_result(data["result"])
+
+                            # 记录API调用结果
+                            end_time = datetime.now()
+                            call_id = f"api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
+                            api_call_info = {
+                                "call_id": call_id,
+                                "timestamp": end_time.isoformat(),
+                                "agent": "MetricCalculationAgent",
+                                "api_endpoint": url,
+                                "config_name": config_name,
+                                "request": {
+                                    "method": method,
+                                    "url": url,
+                                    "headers": headers,
+                                    "json_data": json_data if method.upper() == "POST" else None,
+                                    "params": params if method.upper() == "GET" else None,
+                                    "start_time": start_time.isoformat()
+                                },
+                                "response": {
+                                    "status_code": response.status_code,
+                                    "data": response_data,
+                                    "extracted_result": extracted_result,
+                                    "end_time": end_time.isoformat(),
+                                    "duration": (end_time - start_time).total_seconds()
+                                },
+                                "success": True
+                            }
+                            self.api_calls.append(api_call_info)
+
+                            # 保存API结果到文件
+                            api_results_dir = "api_results"
+                            os.makedirs(api_results_dir, exist_ok=True)
+                            filename = f"{call_id}.json"
+                            filepath = os.path.join(api_results_dir, filename)
+
+                            try:
+                                with open(filepath, 'w', encoding='utf-8') as f:
+                                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                                print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                            except Exception as e:
+                                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+
+                            return {
+                                "success": True,
+                                "data": response_data,
+                                "extracted_result": extracted_result,
+                                "status_code": response.status_code
+                            }
+                        except json.JSONDecodeError:
+                            # 记录API调用结果（JSON解析失败）
+                            end_time = datetime.now()
+                            call_id = f"api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
+                            api_call_info = {
+                                "call_id": call_id,
+                                "timestamp": end_time.isoformat(),
+                                "agent": "MetricCalculationAgent",
+                                "api_endpoint": url,
+                                "config_name": config_name,
+                                "request": {
+                                    "method": method,
+                                    "url": url,
+                                    "headers": headers,
+                                    "json_data": json_data if method.upper() == "POST" else None,
+                                    "params": params if method.upper() == "GET" else None,
+                                    "start_time": start_time.isoformat()
+                                },
+                                "response": {
+                                    "status_code": response.status_code,
+                                    "data": response.text,
+                                    "error": "JSON解析失败",
+                                    "end_time": end_time.isoformat(),
+                                    "duration": (end_time - start_time).total_seconds()
+                                },
+                                "success": False
+                            }
+                            self.api_calls.append(api_call_info)
+
+                            # 保存API结果到文件
+                            api_results_dir = "api_results"
+                            os.makedirs(api_results_dir, exist_ok=True)
+                            filename = f"{call_id}.json"
+                            filepath = os.path.join(api_results_dir, filename)
+
+                            try:
+                                with open(filepath, 'w', encoding='utf-8') as f:
+                                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                                print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                            except Exception as e:
+                                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+
+                            return {
+                                "success": True,
+                                "data": response.text,
+                                "extracted_result": None,
+                                "status_code": response.status_code
+                            }
+                    else:
+                        # 记录API调用结果（HTTP错误）
+                        end_time = datetime.now()
+                        call_id = f"api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
+                        api_call_info = {
+                            "call_id": call_id,
+                            "timestamp": end_time.isoformat(),
+                            "agent": "MetricCalculationAgent",
+                            "api_endpoint": url,
+                            "config_name": config_name,
+                            "request": {
+                                "method": method,
+                                "url": url,
+                                "headers": headers,
+                                "json_data": json_data if method.upper() == "POST" else None,
+                                "params": params if method.upper() == "GET" else None,
+                                "start_time": start_time.isoformat()
+                            },
+                            "response": {
+                                "status_code": response.status_code,
+                                "error": response.text,
+                                "end_time": end_time.isoformat(),
+                                "duration": (end_time - start_time).total_seconds()
+                            },
+                            "success": False
+                        }
+                        self.api_calls.append(api_call_info)
+
+                        # 保存API结果到文件
+                        api_results_dir = "api_results"
+                        os.makedirs(api_results_dir, exist_ok=True)
+                        filename = f"{call_id}.json"
+                        filepath = os.path.join(api_results_dir, filename)
+
+                        try:
+                            with open(filepath, 'w', encoding='utf-8') as f:
+                                json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                            print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                        except Exception as e:
+                            print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+
+                        return {
+                            "success": False,
+                            "message": f"API调用失败，状态码: {response.status_code}",
+                            "response": response.text
+                        }
+
+                    # 如果执行到这里，说明本次尝试成功，跳出重试循环
+                    break
+
+                except requests.exceptions.Timeout:
+                    # 记录API调用结果（超时）
                     end_time = datetime.now()
-                    call_id = f"api_{config_name}_{int(end_time.timestamp())}"
+                    call_id = f"api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
                     api_call_info = {
                         "call_id": call_id,
                         "timestamp": end_time.isoformat(),
@@ -274,57 +436,7 @@ class MetricCalculationAgent:
                             "start_time": start_time.isoformat()
                         },
                         "response": {
-                            "status_code": response.status_code,
-                            "data": response_data,
-                            "extracted_result": extracted_result,
-                            "end_time": end_time.isoformat(),
-                            "duration": (end_time - start_time).total_seconds()
-                        },
-                        "success": True
-                    }
-                    self.api_calls.append(api_call_info)
-
-                    # 保存API结果到文件
-                    api_results_dir = "api_results"
-                    os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
-                    filepath = os.path.join(api_results_dir, filename)
-
-                    try:
-                        with open(filepath, 'w', encoding='utf-8') as f:
-                            json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                        print(f"[API_RESULT] 保存API结果文件: {filepath}")
-                    except Exception as e:
-                        print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
-                    return {
-                        "success": True,
-                        "data": response_data,
-                        "extracted_result": extracted_result,
-                        "status_code": response.status_code
-                    }
-                except json.JSONDecodeError:
-                    # 记录API调用结果（JSON解析失败）
-                    end_time = datetime.now()
-                    call_id = f"api_{config_name}_{int(end_time.timestamp())}"
-                    api_call_info = {
-                        "call_id": call_id,
-                        "timestamp": end_time.isoformat(),
-                        "agent": "MetricCalculationAgent",
-                        "api_endpoint": url,
-                        "config_name": config_name,
-                        "request": {
-                            "method": method,
-                            "url": url,
-                            "headers": headers,
-                            "json_data": json_data if method.upper() == "POST" else None,
-                            "params": params if method.upper() == "GET" else None,
-                            "start_time": start_time.isoformat()
-                        },
-                        "response": {
-                            "status_code": response.status_code,
-                            "data": response.text,
-                            "error": "JSON解析失败",
+                            "error": "API调用超时",
                             "end_time": end_time.isoformat(),
                             "duration": (end_time - start_time).total_seconds()
                         },
@@ -345,190 +457,125 @@ class MetricCalculationAgent:
                     except Exception as e:
                         print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
 
-                    return {
-                        "success": True,
-                        "data": response.text,
-                        "extracted_result": None,
-                        "status_code": response.status_code
+                    # 如果不是最后一次尝试，等待后重试
+                    if attempt < max_retries - 1:
+                        print(f"⏳ API调用超时，{retry_delay}秒后重试...")
+                        import time
+                        time.sleep(retry_delay)
+                        continue
+                    else:
+                        return {
+                            "success": False,
+                            "message": "API调用超时"
+                        }
+                except requests.exceptions.RequestException as e:
+                    # 记录API调用结果（请求异常）
+                    end_time = datetime.now()
+                    call_id = f"api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
+                    api_call_info = {
+                        "call_id": call_id,
+                        "timestamp": end_time.isoformat(),
+                        "agent": "MetricCalculationAgent",
+                        "api_endpoint": url,
+                        "config_name": config_name,
+                        "request": {
+                            "method": method,
+                            "url": url,
+                            "headers": headers,
+                            "json_data": json_data if method.upper() == "POST" else None,
+                            "params": params if method.upper() == "GET" else None,
+                            "start_time": start_time.isoformat()
+                        },
+                        "response": {
+                            "error": str(e),
+                            "end_time": end_time.isoformat(),
+                            "duration": (end_time - start_time).total_seconds()
+                        },
+                        "success": False
                     }
-            else:
-                # 记录API调用结果（HTTP错误）
-                end_time = datetime.now()
-                call_id = f"api_{config_name}_{int(end_time.timestamp())}"
-                api_call_info = {
-                    "call_id": call_id,
-                    "timestamp": end_time.isoformat(),
-                    "agent": "MetricCalculationAgent",
-                    "api_endpoint": url,
-                    "config_name": config_name,
-                    "request": {
-                        "method": method,
-                        "url": url,
-                        "headers": headers,
-                        "json_data": json_data if method.upper() == "POST" else None,
-                        "params": params if method.upper() == "GET" else None,
-                        "start_time": start_time.isoformat()
-                    },
-                    "response": {
-                        "status_code": response.status_code,
-                        "error": response.text,
-                        "end_time": end_time.isoformat(),
-                        "duration": (end_time - start_time).total_seconds()
-                    },
-                    "success": False
-                }
-                self.api_calls.append(api_call_info)
+                    self.api_calls.append(api_call_info)
 
-                # 保存API结果到文件
-                api_results_dir = "api_results"
-                os.makedirs(api_results_dir, exist_ok=True)
-                filename = f"{call_id}.json"
-                filepath = os.path.join(api_results_dir, filename)
+                    # 保存API结果到文件
+                    api_results_dir = "api_results"
+                    os.makedirs(api_results_dir, exist_ok=True)
+                    filename = f"{call_id}.json"
+                    filepath = os.path.join(api_results_dir, filename)
 
-                try:
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                    print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                    try:
+                        with open(filepath, 'w', encoding='utf-8') as f:
+                            json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                        print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                    except Exception as e:
+                        print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+
+                    # 如果不是最后一次尝试，等待后重试
+                    if attempt < max_retries - 1:
+                        print(f"❌ API调用异常: {str(e)}，{retry_delay}秒后重试...")
+                        import time
+                        time.sleep(retry_delay)
+                        continue
+                    else:
+                        return {
+                            "success": False,
+                            "message": f"API调用异常: {str(e)}"
+                        }
                 except Exception as e:
-                    print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
+                    # 记录API调用结果（其他异常）
+                    end_time = datetime.now()
+                    call_id = f"api_{config_name}_{"{:.2f}".format((end_time - start_time).total_seconds())}"
+                    api_call_info = {
+                        "call_id": call_id,
+                        "timestamp": end_time.isoformat(),
+                        "agent": "MetricCalculationAgent",
+                        "api_endpoint": url,
+                        "config_name": config_name,
+                        "request": {
+                            "method": method,
+                            "url": url,
+                            "headers": headers,
+                            "json_data": json_data if method.upper() == "POST" else None,
+                            "params": params if method.upper() == "GET" else None,
+                            "start_time": start_time.isoformat()
+                        },
+                        "response": {
+                            "error": str(e),
+                            "end_time": end_time.isoformat(),
+                            "duration": (end_time - start_time).total_seconds()
+                        },
+                        "success": False
+                    }
+                    self.api_calls.append(api_call_info)
 
-                return {
-                    "success": False,
-                    "message": f"API调用失败，状态码: {response.status_code}",
-                    "response": response.text
-                }
+                    # 保存API结果到文件
+                    api_results_dir = "api_results"
+                    os.makedirs(api_results_dir, exist_ok=True)
+                    filename = f"{call_id}.json"
+                    filepath = os.path.join(api_results_dir, filename)
 
-        except requests.exceptions.Timeout:
-            # 记录API调用结果（超时）
-            end_time = datetime.now()
-            call_id = f"api_{config_name}_{int(end_time.timestamp())}"
-            api_call_info = {
-                "call_id": call_id,
-                "timestamp": end_time.isoformat(),
-                "agent": "MetricCalculationAgent",
-                "api_endpoint": url,
-                "config_name": config_name,
-                "request": {
-                    "method": method,
-                    "url": url,
-                    "headers": headers,
-                    "json_data": json_data if method.upper() == "POST" else None,
-                    "params": params if method.upper() == "GET" else None,
-                    "start_time": start_time.isoformat()
-                },
-                "response": {
-                    "error": "API调用超时",
-                    "end_time": end_time.isoformat(),
-                    "duration": (end_time - start_time).total_seconds()
-                },
-                "success": False
-            }
-            self.api_calls.append(api_call_info)
+                    try:
+                        with open(filepath, 'w', encoding='utf-8') as f:
+                            json.dump(api_call_info, f, ensure_ascii=False, indent=2)
+                        print(f"[API_RESULT] 保存API结果文件: {filepath}")
+                    except Exception as e:
+                        print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
 
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[API_RESULT] 保存API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
-            return {
-                "success": False,
-                "message": "API调用超时"
-            }
-        except requests.exceptions.RequestException as e:
-            # 记录API调用结果（请求异常）
-            end_time = datetime.now()
-            call_id = f"api_{config_name}_{int(end_time.timestamp())}"
-            api_call_info = {
-                "call_id": call_id,
-                "timestamp": end_time.isoformat(),
-                "agent": "MetricCalculationAgent",
-                "api_endpoint": url,
-                "config_name": config_name,
-                "request": {
-                    "method": method,
-                    "url": url,
-                    "headers": headers,
-                    "json_data": json_data if method.upper() == "POST" else None,
-                    "params": params if method.upper() == "GET" else None,
-                    "start_time": start_time.isoformat()
-                },
-                "response": {
-                    "error": str(e),
-                    "end_time": end_time.isoformat(),
-                    "duration": (end_time - start_time).total_seconds()
-                },
-                "success": False
-            }
-            self.api_calls.append(api_call_info)
-
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[API_RESULT] 保存API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
-            return {
-                "success": False,
-                "message": f"API调用异常: {str(e)}"
-            }
+                    # 如果不是最后一次尝试，等待后重试
+                    if attempt < max_retries - 1:
+                        print(f"❌ 其他异常: {str(e)}，{retry_delay}秒后重试...")
+                        import time
+                        time.sleep(retry_delay)
+                        continue
+                    else:
+                        return {
+                            "success": False,
+                            "message": f"API调用异常: {str(e)}"
+                        }
         except Exception as e:
-            # 记录API调用结果（其他异常）
-            end_time = datetime.now()
-            call_id = f"api_{config_name}_{int(end_time.timestamp())}"
-            api_call_info = {
-                "call_id": call_id,
-                "timestamp": end_time.isoformat(),
-                "agent": "MetricCalculationAgent",
-                "api_endpoint": url,
-                "config_name": config_name,
-                "request": {
-                    "method": method,
-                    "url": url,
-                    "headers": headers,
-                    "json_data": json_data if method.upper() == "POST" else None,
-                    "params": params if method.upper() == "GET" else None,
-                    "start_time": start_time.isoformat()
-                },
-                "response": {
-                    "error": str(e),
-                    "end_time": end_time.isoformat(),
-                    "duration": (end_time - start_time).total_seconds()
-                },
-                "success": False
-            }
-            self.api_calls.append(api_call_info)
-
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[API_RESULT] 保存API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存API结果文件失败: {filepath}, 错误: {str(e)}")
-
+            # 处理所有未捕获的异常
+            print(f"❌ API调用过程中发生未预期的错误: {str(e)}")
             return {
                 "success": False,
-                "message": f"处理API调用时发生错误: {str(e)}"
+                "message": f"API调用过程中发生未预期的错误: {str(e)}"
             }
 
     def _prepare_request_data(self, config: Dict[str, Any], intent_result: Dict[str, Any], config_name: str) -> Dict[str, Any]:

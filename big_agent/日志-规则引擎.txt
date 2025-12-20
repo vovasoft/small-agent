@@ -1,0 +1,164 @@
+🚀 执行CompleteAgentFlow系统测试
+==================================================
+📊 测试数据: 1 条记录
+🚀 启动完整智能体工作流...
+问题：分析收入情况
+数据条数：1
+计算模式：标准模式
+🧠 正在执行规划分析...
+========================================
+[AGENT] PlanningAgent (规划Agent)
+[MODEL_INPUT] PlanningAgent:
+[CONTEXT] 基于当前状态做出规划决策
+Question: 分析收入情况
+Status info: 当前状态评估：
+- 规划步骤: 0
+- 大纲版本: 0
+- 大纲草稿存在: False
+- 指标需求总数: 0
+- 已计算指标数: 0
+- 指标覆盖率: 0.00%
+- 待计算指标数: 0
+- 有效待计算指标数: 0
+- 失败尝试记录: {}
+
+建议下一步: 计算指标
+========================================
+解析规划决策响应失败: 3 validation errors for PlanningDecision
+additional_requirements.dict[str,any]
+  Input should be a valid dictionary [type=dict_type, input_value="用户需求'分析收...准或分析维度？", input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/dict_type
+additional_requirements.list[any]
+  Input should be a valid list [type=list_type, input_value="用户需求'分析收...准或分析维度？", input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/list_type
+additional_requirements.ClarificationRequest
+  Input should be a valid dictionary or instance of ClarificationRequest [type=model_type, input_value="用户需求'分析收...准或分析维度？", input_type=str]
+    For further information visit https://errors.pydantic.dev/2.12/v/model_type，使用默认决策
+[API_RESULT] 保存API结果文件: api_results/api_mll_规划决策_7.20.json
+[MODEL_OUTPUT] PlanningAgent: {"decision": "generate_outline", "reasoning": "解析响应失败，使用默认决策生成大纲", "next_actions": ["生成报告大纲"], "metrics_to_compute": [], "priority_metrics": [], "additional_requirements": null}
+========================================
+
+🧠 规划决策：generate_outline
+   推理：解析响应失败，使用默认决策生成大纲...
+✅ 规划决策完成：generate_outline
+
+🔍 [路由决策] 步骤=1, 大纲=False, 指标需求=0
+→ 路由到 outline_generator（生成大纲）
+📝 正在生成报告大纲...
+📝 开始生成报告大纲（最多重试 5 次）...
+   尝试 1/5...
+========================================
+[AGENT] OutlineGeneratorAgent (大纲生成Agent)
+[MODEL_INPUT] OutlineGeneratorAgent:
+[CONTEXT] 基于用户需求和数据样本生成报告大纲
+Question: 分析收入情况
+Sample data count: 1
+========================================
+[API_RESULT] 保存API结果文件: api_results/api_mll_大纲生成_33.80.json
+[MODEL_OUTPUT] OutlineGeneratorAgent: {"report_title": "黑色金属与农业行业收入专项分析报告", "sections": [{"section_id": "sec_1", "title": "行业总体经营概况", "description": "概述黑色金属与农业两大行业的总体收入与支出规模，为后续深入分析提供宏观背景。", "metrics_needed": ["black_metal_total_income", "black_metal_total_expense", "agriculture_total_income", "agriculture_total_expense"]}, {"section_id": "sec_2", "title": "黑色金属行业深度分析", "description": "深入分析黑色金属行业的收入与支出结构，识别核心交易对手，评估业务集中度与主要资金流向。", "metrics_needed": ["black_metal_income_top3", "black_metal_expense_top3", "black_metal_total_income", "black_metal_total_expense"]}, {"section_id": "sec_3", "title": "农业行业深度分析", "description": "深入分析农业行业的收入与支出结构，识别核心交易对手，评估业务集中度与主要资金流向。", "metrics_needed": ["agriculture_income_top3", "agriculture_expense_top3", "agriculture_total_income", "agriculture_total_expense"]}], "global_metrics": [{"metric_id": "black_metal_income_top3", "metric_name": "黑色金属-交易对手收入排名TOP3", "calculation_logic": "筛选 businessType 属于黑色金属行业且 txDirection 为‘收入’的交易，按 txCounterparty 分组汇总 txAmount，取总额最高的前3名。", "required_fields": ["txAmount", "txDirection", "txCounterparty", "businessType"], "dependencies": []}, {"metric_id": "black_metal_expense_top3", "metric_name": "黑色金属-交易对手支出排名TOP3", "calculation_logic": "筛选 businessType 属于黑色金属行业且 txDirection 为‘支出’的交易，按 txCounterparty 分组汇总 txAmount，取总额最高的前3名。", "required_fields": ["txAmount", "txDirection", "txCounterparty", "businessType"], "dependencies": []}, {"metric_id": "black_metal_total_income", "metric_name": "黑色金属-总经营收入", "calculation_logic": "筛选 businessType 属于黑色金属行业且 txDirection 为‘收入’的交易，汇总所有 txAmount。", "required_fields": ["txAmount", "txDirection", "businessType"], "dependencies": []}, {"metric_id": "black_metal_total_expense", "metric_name": "黑色金属-总经营支出", "calculation_logic": "筛选 businessType 属于黑色金属行业且 txDirection 为‘支出’的交易，汇总所有 txAmount。", "required_fields": ["txAmount", "txDirection", "businessType"], "dependencies": []}, {"metric_id": "agriculture_income_top3", "metric_name": "农业-交易对手收入排名TOP3", "calculation_logic": "筛选 businessType 属于农业行业且 txDirection 为‘收入’的交易，按 txCounterparty 分组汇总 txAmount，取总额最高的前3名。", "required_fields": ["txAmount", "txDirection", "txCounterparty", "businessType"], "dependencies": []}, {"metric_id": "agriculture_expense_top3", "metric_name": "农业-交易对手支出排名TOP3", "calculation_logic": "筛选 businessType 属于农业行业且 txDirection 为‘支出’的交易，按 txCounterparty 分组汇总 txAmount，取总额最高的前3名。", "required_fields": ["txAmount", "txDirection", "txCounterparty", "businessType"], "dependencies": []}, {"metric_id": "agriculture_total_income", "metric_name": "农业-总经营收入", "calculation_logic": "筛选 businessType 属于农业行业且 txDirection 为‘收入’的交易，汇总所有 txAmount。", "required_fields": ["txAmount", "txDirection", "businessType"], "dependencies": []}, {"metric_id": "agriculture_total_expense", "metric_name": "农业-总经营支出", "calculation_logic": "筛选 businessType 属于农业行业且 txDirection 为‘支出’的交易，汇总所有 txAmount。", "required_fields": ["txAmount", "txDirection", "businessType"], "dependencies": []}]}
+========================================
+.2f
+
+📝 大纲生成成功：
+   标题：黑色金属与农业行业收入专项分析报告
+   章节数：3
+   指标数：8
+✅ 大纲生成完成：黑色金属与农业行业收入专项分析报告
+   包含 3 个章节，8 个指标需求
+🧠 正在执行规划分析...
+========================================
+[AGENT] PlanningAgent (规划Agent)
+[MODEL_INPUT] PlanningAgent:
+[CONTEXT] 基于当前状态做出规划决策
+Question: 分析收入情况
+Status info: 当前状态评估：
+- 规划步骤: 1
+- 大纲版本: 1
+- 大纲草稿存在: True
+- 指标需求总数: 8
+- 已计算指标数: 0
+- 指标覆盖率: 0.00%
+- 待计算指标数: 8
+- 有效待计算指标数: 8
+- 失败尝试记录: {}
+
+建议下一步: 计算指标
+========================================
+[API_RESULT] 保存API结果文件: api_results/api_mll_规划决策_7.41.json
+[MODEL_OUTPUT] PlanningAgent: {"decision": "compute_metrics", "reasoning": "大纲草稿已存在（outline_draft存在），但指标覆盖率仅为0.00%（0/8），远低于80%的阈值。需要立即开始计算指标以推进报告生成。", "next_actions": ["调用指标计算服务处理指定的指标ID列表"], "metrics_to_compute": ["black_metal_income_top3", "black_metal_expense_top3", "black_metal_total_income", "black_metal_total_expense", "agriculture_income_top3", "agriculture_expense_top3", "agriculture_total_income", "agriculture_total_expense"], "priority_metrics": ["black_metal_income_top3", "agriculture_income_top3", "black_metal_total_income"], "additional_requirements": null}
+========================================
+
+🧠 规划决策：compute_metrics
+   推理：大纲草稿已存在（outline_draft存在），但指标覆盖率仅为0.00%（0/8），远低于80%的阈值。需要立即开始计算指标以推进报告生成。...
+   待计算指标：['black_metal_income_top3', 'black_metal_expense_top3', 'black_metal_total_income', 'black_metal_total_expense', 'agriculture_income_top3', 'agriculture_expense_top3', 'agriculture_total_income', 'agriculture_total_expense']
+✅ 规划决策完成：compute_metrics
+
+🔍 [路由决策] 步骤=2, 大纲=True, 指标需求=8
+  指标覆盖率 = 0.00%
+→ 路由到 metric_calculator（计算指标，覆盖率=0.00%）
+🧮 正在执行指标计算...
+🧮 计算指标: black_metal_income_top3 - 黑色金属-交易对手收入排名TOP3
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-黑色金属-交易对手收入排名TOP3_0.17.json
+✅ 指标 black_metal_income_top3 计算成功
+🧮 计算指标: black_metal_expense_top3 - 黑色金属-交易对手支出排名TOP3
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-黑色金属-交易对手支出排名TOP3_0.03.json
+✅ 指标 black_metal_expense_top3 计算成功
+🧮 计算指标: black_metal_total_income - 黑色金属-总经营收入
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-黑色金属-总经营收入_0.04.json
+✅ 指标 black_metal_total_income 计算成功
+🧮 计算指标: black_metal_total_expense - 黑色金属-总经营支出
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-黑色金属-总经营支出_0.04.json
+✅ 指标 black_metal_total_expense 计算成功
+🧮 计算指标: agriculture_income_top3 - 农业-交易对手收入排名TOP3
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-农业-交易对手收入排名TOP3_0.03.json
+✅ 指标 agriculture_income_top3 计算成功
+🧮 计算指标: agriculture_expense_top3 - 农业-交易对手支出排名TOP3
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-农业-交易对手支出排名TOP3_0.04.json
+✅ 指标 agriculture_expense_top3 计算成功
+🧮 计算指标: agriculture_total_income - 农业-总经营收入
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-农业-总经营收入_0.03.json
+✅ 指标 agriculture_total_income 计算成功
+🧮 计算指标: agriculture_total_expense - 农业-总经营支出
+[RULES_API_RESULT] 保存规则引擎API结果文件: api_results/rules_api_指标计算（规则引擎）-农业-总经营支出_0.03.json
+✅ 指标 agriculture_total_expense 计算成功
+✅ 指标计算完成：8 成功，0 失败
+🧠 正在执行规划分析...
+========================================
+[AGENT] PlanningAgent (规划Agent)
+[MODEL_INPUT] PlanningAgent:
+[CONTEXT] 基于当前状态做出规划决策
+Question: 分析收入情况
+Status info: 当前状态评估：
+- 规划步骤: 2
+- 大纲版本: 1
+- 大纲草稿存在: True
+- 指标需求总数: 8
+- 已计算指标数: 8
+- 指标覆盖率: 100.00%
+- 待计算指标数: 0
+- 有效待计算指标数: 0
+- 失败尝试记录: {}
+
+建议下一步: 生成报告
+========================================
+[API_RESULT] 保存API结果文件: api_results/api_mll_规划决策_5.37.json
+[MODEL_OUTPUT] PlanningAgent: {"decision": "finalize_report", "reasoning": "大纲草稿已存在（outline_draft存在），指标需求总数为8个，已计算指标数为8个，指标覆盖率达到100.00%（≥80%），且用户需求明确（分析收入情况），信息充足，符合生成最终报告的条件。", "next_actions": ["生成最终报告文档", "整合所有已计算指标数据", "进行收入情况的分析与总结"], "metrics_to_compute": [], "priority_metrics": [], "additional_requirements": null}
+========================================
+
+🧠 规划决策：finalize_report
+   推理：大纲草稿已存在（outline_draft存在），指标需求总数为8个，已计算指标数为8个，指标覆盖率达到100.00%（≥80%），且用户需求明确（分析收入情况），信息充足，符合生成最终报告的条件。...
+✅ 规划决策完成：finalize_report
+
+🔍 [路由决策] 步骤=3, 大纲=True, 指标需求=8
+  指标覆盖率 = 100.00%
+→ 路由到 report_finalizer（生成最终报告，覆盖率=100.00%）
+📋 正在生成最终报告...
+✅ 最终报告生成完成：黑色金属与农业行业收入专项分析报告
+   章节数：3
+   计算指标：8/8
+.2%
+✅ 工作流执行完成
+📋 结果: ✅ 成功
+   规划步骤: 3
+   指标计算: 8
+🎉 测试成功！
