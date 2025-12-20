@@ -626,7 +626,8 @@ async def main():
 
     # 执行测试
     result = await run_complete_agent_flow(
-        question="执行流水分析任务",
+        question="执行农业相关的流水分析任务",
+        # question="执行黑色金属相关的流水分析任务",
         data=test_data,
         api_key=config.DEEPSEEK_API_KEY,
         session_id="direct-test"

@@ -99,8 +99,6 @@ class OutlineGeneratorAgent:
 可用字段：
 {', '.join(available_fields)}
 
-样本数据：
-{sample_str}
 
 === 必须包含的指标列表 ===
 系统要求报告必须包含以下8个核心指标：
