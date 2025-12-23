@@ -1,0 +1,15 @@
+{
+  "rule_id": "metric-收入数据时间范围",
+  "execution_time": 0.010924100875854492,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "timeRangeResult": {
+      "maxTime": "2025-12-31",
+      "minTime": "2023-01-05",
+      "count": 152
+    }
+  },
+  "error": null,
+  "raw_response": "{\"timeRangeResult\":{\"maxTime\":\"2025-12-31\",\"minTime\":\"2023-01-05\",\"count\":152}}"
+}

@@ -1,0 +1,16 @@
+{
+  "rule_id": "metric-收入笔数",
+  "execution_time": 0.03132891654968262,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "incomeCount": [
+      {
+        "totalCount": 152,
+        "txDirection": "收入"
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"incomeCount\":[{\"totalCount\":152,\"txDirection\":\"收入\"}]}"
+}

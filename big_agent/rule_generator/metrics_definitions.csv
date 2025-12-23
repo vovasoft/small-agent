@@ -1,0 +1,16 @@
+指标名称,指标描述
+总收入,统计期内全部收入金额 其中收入字段是txdirection 金额字段是txamount
+收入笔数,流水数据中类型为收入的总数 其中收入字段是txdirection
+收入数据时间范围,流水数据中类型为收入覆盖的起止时间 其中收入字段是txdirection 日期字段是txdate
+各类型收入占总收入比例,不同收入类型在总收入中的占比情况 其中收入字段是txdirection 类型字段是txsummary 金额字段是txamount
+总支出,统计期内全部支出金额 其中支出字段是txdirection 金额字段是txamount
+支出笔数,流水数据中类型为支出的总数 其中支出字段是txdirection
+支出数据时间范围,流水数据中类型为支出覆盖的起止时间 其中支出字段是txdirection 日期字段是txdate
+各类型支出占总支出比例,不同支出类型在总支出中的占比情况 其中支出字段是txdirection 类型字段是txsummary 金额字段是txamount
+分析账户数量,该流水数据中设计的账户数量 其中账户字段是txcounterparty
+各账户交易时间范围,不同账户交易的起止时间 其中账户字段是txcounterparty 日期字段是txdate
+流入流出月度统计,按月份与交易渠道统计资金流入与流出情况 其中日期字段是txdate 方向字段是txdirection 金额字段是txamount
+分月按交易渠道总明细收入,按月份和交易渠道汇总的收入明细 其中日期字段是txdate 收入字段是txdirection 金额字段是txamount
+分月按交易渠道总明细支出,按月份和交易渠道汇总的支出明细 其中日期字段是txdate 支出字段是txdirection 金额字段是txamount
+分月总收入,每月全部收入的汇总金额 其中日期字段是txdate 收入字段是txdirection 金额字段是txamount
+分月总支出,每月全部支出的汇总金额 其中日期字段是txdate 支出字段是txdirection 金额字段是txamount

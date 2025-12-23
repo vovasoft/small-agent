@@ -205,7 +205,7 @@ class CompleteAgentFlow:
                 industry=state["industry"],
                 sample_data=state["data_set"][:3],  # 使用前3个样本
                 api_key=self.api_key,
-                max_retries=1,  # 最多重试5次
+                max_retries=5,  # 最多重试5次
                 retry_delay=3.0  # 每次重试间隔3秒
             )
 
@@ -326,13 +326,13 @@ class CompleteAgentFlow:
 
                     if use_rules_engine:
                         # 使用规则引擎计算
-                        # 现在metric_id已经是知识ID，直接使用它作为配置名
-                        config_name = metric_id  # metric_id 已经是知识ID，如 "metric-分析账户数量"
+                        # 构建规则引擎配置文件名，确保能匹配到正确的配置
+                        base_name = metric_req.metric_name.replace('（规则引擎）', '').strip()
+                        config_name = f"指标计算（规则引擎）-{base_name}"
                         intent_result = {
                             "target_configs": [config_name],
                             "intent_category": "指标计算"
                         }
-                        print(f"   使用知识ID: {config_name}")
                         results = await self.rules_engine_agent.calculate_metrics(intent_result)
                     else:
                         # 使用传统指标计算（模拟）
@@ -631,8 +631,8 @@ async def main():
 
     # 执行测试
     result = await run_complete_agent_flow(
-        question="请生成一份详细的农业经营贷流水分析报告，需要包含：1.总收入和总支出统计 2.收入笔数和支出笔数 3.各类型收入支出占比分析 4.交易对手收入支出TOP3排名 5.按月份的收入支出趋势分析 6.账户数量和交易时间范围统计 7.资金流入流出月度统计等全面指标",
-        industry = "农业",
+        question="执行流水分析任务",
+        industry = "黑色金属",
         data=test_data,
         api_key=config.DEEPSEEK_API_KEY,
         session_id="direct-test"

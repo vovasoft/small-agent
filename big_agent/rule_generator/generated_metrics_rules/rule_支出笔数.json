@@ -1,0 +1,78 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-支出笔数",
+    "name": "支出笔数",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于流水数据中类型为支出的总数 其中支出字段...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-支出笔数",
+    "ruleType": 1,
+    "ruleDescription": "流水数据中类型为支出的总数 其中支出字段是txdirection",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "expenseSummary"
+    ],
+    "ruleContent": [
+      {
+        "type": "CONDITIONAL",
+        "sourceField": "transactions",
+        "resultField": "filteredExpenses",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "conditionGroups": [
+            {
+              "logic": "AND",
+              "conditions": [
+                {
+                  "field": "txDirection",
+                  "operator": "EQUALS",
+                  "value": "支出"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "GROUP_BY",
+        "sourceField": "filteredExpenses",
+        "resultField": "expenseSummary",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "groupByFields": [],
+          "groupAggregations": [
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "COUNT",
+              "sourceField": "txId",
+              "resultField": "totalExpenseCount"
+            }
+          ]
+        }
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-分月按交易渠道总明细支出",
+    "name": "分月按交易渠道总明细支出",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于按月份和交易渠道汇总的支出明细 其中日期...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-分月按交易渠道总明细支出",
+    "ruleType": 1,
+    "ruleDescription": "按月份和交易渠道汇总的支出明细 其中日期字段是txdate 支出字段是txdirection 金额字段是txamount",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "sortedSummary"
+    ],
+    "ruleContent": [
+      {
+        "type": "CONDITIONAL",
+        "sourceField": "transactions",
+        "resultField": "filteredExpenses",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "conditionGroups": [
+            {
+              "logic": "AND",
+              "conditions": [
+                {
+                  "field": "txDirection",
+                  "operator": "EQUALS",
+                  "value": "支出"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "GROUP_BY",
+        "sourceField": "filteredExpenses",
+        "resultField": "monthlyChannelSummary",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "groupByFields": [
+            "txDate",
+            "txCounterparty"
+          ],
+          "groupAggregations": [
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "SUM",
+              "sourceField": "txAmount",
+              "resultField": "totalAmount"
+            }
+          ]
+        }
+      },
+      {
+        "type": "SORT",
+        "sourceField": "monthlyChannelSummary",
+        "resultField": "sortedSummary",
+        "primaryValue": "txDate",
+        "secondaryValue": 1
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}

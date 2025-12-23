@@ -1,0 +1,762 @@
+{
+  "rule_id": "metric-分月按交易渠道总明细支出",
+  "execution_time": 0.012625932693481445,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "sortedSummary": [
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2023-11-25"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-05-25"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-03-05"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2023-07-18"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2025-07-01"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-02-25"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2025-09-23"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2025-07-31"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "正大饲料公司",
+        "txDate": "2023-03-18"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-06-25"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-09-17"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2023-10-22"
+      },
+      {
+        "totalAmount": -1000.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-03-27"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-10-15"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-07-25"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2025-05-08"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-04-26"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-11-18"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2024-08-12"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2024-07-13"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2024-04-20"
+      },
+      {
+        "totalAmount": -1000.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-07-07"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2024-02-25"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2023-03-25"
+      },
+      {
+        "totalAmount": -1500.0,
+        "txCounterparty": "丰收农资连锁",
+        "txDate": "2023-01-08"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-07-12"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-09-25"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-04-14"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-01-15"
+      },
+      {
+        "totalAmount": -600.0,
+        "txCounterparty": "正大饲料公司",
+        "txDate": "2025-01-28"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-01-22"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2023-08-22"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2024-03-03"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-08-15"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-04-20"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2024-05-20"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2024-06-25"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2025-06-19"
+      },
+      {
+        "totalAmount": -650.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-08-01"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-03-12"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-08-08"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-07-19"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-02-05"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2024-04-02"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2024-03-27"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2024-06-19"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2023-07-05"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2025-09-11"
+      },
+      {
+        "totalAmount": -650.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-11-05"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-11-10"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "正大饲料公司",
+        "txDate": "2025-03-15"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-06-01"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-08-24"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-12-28"
+      },
+      {
+        "totalAmount": -650.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-10-05"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-11-22"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-02-12"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-06-15"
+      },
+      {
+        "totalAmount": -1000.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-04-01"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-11-28"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "村委会",
+        "txDate": "2024-02-12"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-09-12"
+      },
+      {
+        "totalAmount": -650.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-04-08"
+      },
+      {
+        "totalAmount": -600.0,
+        "txCounterparty": "正大饲料公司",
+        "txDate": "2023-01-28"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-12-28"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-10-29"
+      },
+      {
+        "totalAmount": -1000.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-07-25"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2025-10-23"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2024-07-07"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2024-06-13"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2024-03-21"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2023-02-18"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2023-10-08"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2023-09-05"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2024-01-22"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-06-28"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2024-08-30"
+      },
+      {
+        "totalAmount": -1400.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2024-01-08"
+      },
+      {
+        "totalAmount": -1000.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-10-28"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-05-14"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-08-06"
+      },
+      {
+        "totalAmount": -1000.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-09-29"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2023-12-08"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-04-22"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2025-05-20"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-02-12"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2025-08-12"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2024-03-15"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2024-06-07"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2023-05-18"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2025-11-04"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-09-05"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2024-08-18"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-06-13"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-10-02"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-01-15"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "顺丰冷链物流",
+        "txDate": "2024-05-26"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-08-28"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2024-06-01"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-08-18"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2023-04-08"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-05-26"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2024-04-08"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-12-15"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2024-08-24"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2023-06-01"
+      },
+      {
+        "totalAmount": -650.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-04-15"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-03-09"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-03-03"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2024-02-18"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-02-25"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-01-22"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2024-07-01"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2024-03-09"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-09-18"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2024-08-06"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "正大饲料公司",
+        "txDate": "2025-05-02"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2025-12-04"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "村委会",
+        "txDate": "2024-05-08"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2024-05-14"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-06-22"
+      },
+      {
+        "totalAmount": -1500.0,
+        "txCounterparty": "丰收农资连锁",
+        "txDate": "2025-01-08"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-11-12"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "太平洋保险",
+        "txDate": "2025-02-18"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2025-12-22"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-06-07"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-10-11"
+      },
+      {
+        "totalAmount": -650.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-07-13"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-12-22"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2024-01-15"
+      },
+      {
+        "totalAmount": -950.0,
+        "txCounterparty": "村委会",
+        "txDate": "2025-11-16"
+      },
+      {
+        "totalAmount": -1100.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2025-08-30"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "正大饲料公司",
+        "txDate": "2023-05-12"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2024-04-14"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2025-12-16"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2025-10-17"
+      },
+      {
+        "totalAmount": -750.0,
+        "txCounterparty": "中种农业科技",
+        "txDate": "2023-05-05"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2024-04-26"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2024-02-05"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "中化化肥公司",
+        "txDate": "2023-04-28"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "京东冷链",
+        "txDate": "2025-03-21"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2024-07-19"
+      },
+      {
+        "totalAmount": -900.0,
+        "txCounterparty": "村委会",
+        "txDate": "2023-02-05"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2023-12-02"
+      },
+      {
+        "totalAmount": -850.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2024-01-28"
+      },
+      {
+        "totalAmount": -800.0,
+        "txCounterparty": "平安保险",
+        "txDate": "2025-04-02"
+      },
+      {
+        "totalAmount": -700.0,
+        "txCounterparty": "村委会",
+        "txDate": "2024-07-31"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2024-05-02"
+      },
+      {
+        "totalAmount": -1200.0,
+        "txCounterparty": "员工个人账户",
+        "txDate": "2025-12-10"
+      },
+      {
+        "totalAmount": -1300.0,
+        "txCounterparty": "北方农机服务",
+        "txDate": "2023-06-08"
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"sortedSummary\":[{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2023-11-25\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-05-25\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-03-05\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2023-07-18\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2025-07-01\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-02-25\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2025-09-23\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2025-07-31\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"正大饲料公司\",\"txDate\":\"2023-03-18\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-06-25\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-09-17\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2023-10-22\"},{\"totalAmount\":-1000.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-03-27\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-10-15\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-07-25\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2025-05-08\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-04-26\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-11-18\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2024-08-12\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2024-07-13\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2024-04-20\"},{\"totalAmount\":-1000.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-07-07\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2024-02-25\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2023-03-25\"},{\"totalAmount\":-1500.0,\"txCounterparty\":\"丰收农资连锁\",\"txDate\":\"2023-01-08\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-07-12\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-09-25\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-04-14\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-01-15\"},{\"totalAmount\":-600.0,\"txCounterparty\":\"正大饲料公司\",\"txDate\":\"2025-01-28\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-01-22\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2023-08-22\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2024-03-03\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-08-15\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-04-20\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2024-05-20\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2024-06-25\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2025-06-19\"},{\"totalAmount\":-650.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-08-01\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-03-12\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-08-08\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-07-19\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-02-05\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2024-04-02\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2024-03-27\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2024-06-19\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2023-07-05\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2025-09-11\"},{\"totalAmount\":-650.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-11-05\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-11-10\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"正大饲料公司\",\"txDate\":\"2025-03-15\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-06-01\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-08-24\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-12-28\"},{\"totalAmount\":-650.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-10-05\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-11-22\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-02-12\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-06-15\"},{\"totalAmount\":-1000.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-04-01\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-11-28\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2024-02-12\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-09-12\"},{\"totalAmount\":-650.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-04-08\"},{\"totalAmount\":-600.0,\"txCounterparty\":\"正大饲料公司\",\"txDate\":\"2023-01-28\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-12-28\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-10-29\"},{\"totalAmount\":-1000.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-07-25\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2025-10-23\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2024-07-07\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2024-06-13\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2024-03-21\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2023-02-18\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2023-10-08\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2023-09-05\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2024-01-22\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-06-28\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2024-08-30\"},{\"totalAmount\":-1400.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2024-01-08\"},{\"totalAmount\":-1000.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-10-28\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-05-14\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-08-06\"},{\"totalAmount\":-1000.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-09-29\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2023-12-08\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-04-22\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2025-05-20\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-02-12\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2025-08-12\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2024-03-15\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2024-06-07\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2023-05-18\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2025-11-04\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-09-05\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2024-08-18\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-06-13\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-10-02\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-01-15\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"顺丰冷链物流\",\"txDate\":\"2024-05-26\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-08-28\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2024-06-01\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-08-18\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2023-04-08\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-05-26\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2024-04-08\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-12-15\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2024-08-24\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2023-06-01\"},{\"totalAmount\":-650.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-04-15\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-03-09\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-03-03\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2024-02-18\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-02-25\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-01-22\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2024-07-01\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2024-03-09\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-09-18\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2024-08-06\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"正大饲料公司\",\"txDate\":\"2025-05-02\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2025-12-04\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2024-05-08\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2024-05-14\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-06-22\"},{\"totalAmount\":-1500.0,\"txCounterparty\":\"丰收农资连锁\",\"txDate\":\"2025-01-08\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-11-12\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"太平洋保险\",\"txDate\":\"2025-02-18\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2025-12-22\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-06-07\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-10-11\"},{\"totalAmount\":-650.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-07-13\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-12-22\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2024-01-15\"},{\"totalAmount\":-950.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2025-11-16\"},{\"totalAmount\":-1100.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2025-08-30\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"正大饲料公司\",\"txDate\":\"2023-05-12\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2024-04-14\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2025-12-16\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2025-10-17\"},{\"totalAmount\":-750.0,\"txCounterparty\":\"中种农业科技\",\"txDate\":\"2023-05-05\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2024-04-26\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2024-02-05\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"中化化肥公司\",\"txDate\":\"2023-04-28\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"京东冷链\",\"txDate\":\"2025-03-21\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2024-07-19\"},{\"totalAmount\":-900.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2023-02-05\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2023-12-02\"},{\"totalAmount\":-850.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2024-01-28\"},{\"totalAmount\":-800.0,\"txCounterparty\":\"平安保险\",\"txDate\":\"2025-04-02\"},{\"totalAmount\":-700.0,\"txCounterparty\":\"村委会\",\"txDate\":\"2024-07-31\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2024-05-02\"},{\"totalAmount\":-1200.0,\"txCounterparty\":\"员工个人账户\",\"txDate\":\"2025-12-10\"},{\"totalAmount\":-1300.0,\"txCounterparty\":\"北方农机服务\",\"txDate\":\"2023-06-08\"}]}"
+}

@@ -1,0 +1,117 @@
+{
+  "rule_id": "metric-各账户交易时间范围",
+  "execution_time": 0.014803886413574219,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "groupedByCounterparty": [
+      {
+        "endDate": 0.0,
+        "txCounterparty": "雨润食品",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "正大饲料公司",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "京东冷链",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "太平洋保险",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "双汇食品集团",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "北方农机服务",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "绿源农产品公司",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "员工个人账户",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "顺丰冷链物流",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "金穗粮食贸易公司",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "丰收农资连锁",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "中化化肥公司",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "省农业厅",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "平安保险",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "永辉超市",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "市农业农村局",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "中种农业科技",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "同仁堂药业",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "康恩贝药业",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "社区生鲜店",
+        "startDate": 0.0
+      },
+      {
+        "endDate": 0.0,
+        "txCounterparty": "村委会",
+        "startDate": 0.0
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"groupedByCounterparty\":[{\"endDate\":0.0,\"txCounterparty\":\"雨润食品\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"正大饲料公司\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"京东冷链\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"太平洋保险\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"双汇食品集团\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"北方农机服务\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"绿源农产品公司\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"员工个人账户\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"顺丰冷链物流\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"金穗粮食贸易公司\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"丰收农资连锁\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"中化化肥公司\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"省农业厅\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"平安保险\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"永辉超市\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"市农业农村局\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"中种农业科技\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"同仁堂药业\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"康恩贝药业\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"社区生鲜店\",\"startDate\":0.0},{\"endDate\":0.0,\"txCounterparty\":\"村委会\",\"startDate\":0.0}]}"
+}

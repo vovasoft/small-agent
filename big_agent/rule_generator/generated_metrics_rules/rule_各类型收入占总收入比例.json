@@ -1,0 +1,88 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-各类型收入占总收入比例",
+    "name": "各类型收入占总收入比例",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于不同收入类型在总收入中的占比情况 其中收...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-各类型收入占总收入比例",
+    "ruleType": 1,
+    "ruleDescription": "不同收入类型在总收入中的占比情况 其中收入字段是txdirection 类型字段是txsummary 金额字段是txamount",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "incomeProportion"
+    ],
+    "ruleContent": [
+      {
+        "type": "CONDITIONAL",
+        "sourceField": "transactions",
+        "resultField": "filteredIncome",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "conditionGroups": [
+            {
+              "logic": "AND",
+              "conditions": [
+                {
+                  "field": "txDirection",
+                  "operator": "EQUALS",
+                  "value": "收入"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "GROUP_BY",
+        "sourceField": "filteredIncome",
+        "resultField": "groupedIncome",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "groupByFields": [
+            "txSummary"
+          ],
+          "groupAggregations": [
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "SUM",
+              "sourceField": "txAmount",
+              "resultField": "totalAmount"
+            }
+          ]
+        }
+      },
+      {
+        "type": "PROPORTION",
+        "sourceField": "groupedIncome",
+        "resultField": "incomeProportion",
+        "primaryValue": "totalAmount",
+        "secondaryValue": "txSummary",
+        "configuration": {}
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}

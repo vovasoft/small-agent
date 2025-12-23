@@ -1,14 +1,13 @@
 """
-完整的智能体工作流 (Complete Agent Flow)
-=====================================
+完整的智能体工作流 (Complete Agent Flow - No Rules Engine)
+============================================================
 
-此工作流整合了规划、大纲生成和指标计算四个核心智能体，实现完整的报告生成流程。
+此工作流整合了规划、大纲生成和传统指标计算三个核心智能体，实现完整的报告生成流程。
 
 包含的智能体：
 1. PlanningAgent (规划智能体) - 分析状态并做出决策
 2. OutlineAgent (大纲生成智能体) - 生成报告结构和指标需求
-3. MetricCalculationAgent (指标计算智能体) - 执行标准指标计算
-4. RulesEngineMetricCalculationAgent (规则引擎指标计算智能体) - 执行规则引擎指标计算
+3. MetricCalculationAgent (传统指标计算智能体) - 执行标准指标计算
 
 工作流程：
 1. 规划节点 → 分析当前状态，决定下一步行动
@@ -21,6 +20,7 @@
 - 支持条件路由和状态管理
 - 完善的错误处理机制
 - 详细的执行日志记录
+- 使用传统指标计算引擎
 
 作者: Big Agent Team
 版本: 1.0.0
@@ -48,7 +48,6 @@ from workflow_state import (
 from agents.outline_agent import OutlineGeneratorAgent, generate_report_outline
 from agents.planning_agent import PlanningAgent, plan_next_action, analyze_current_state
 from agents.metric_calculation_agent import MetricCalculationAgent
-from agents.rules_engine_metric_calculation_agent import RulesEngineMetricCalculationAgent
 
 
 class CompleteAgentFlow:
@@ -68,8 +67,7 @@ class CompleteAgentFlow:
         # 初始化各个智能体
         self.planning_agent = PlanningAgent(api_key, base_url)
         self.outline_agent = OutlineGeneratorAgent(api_key, base_url)
-        # self.metric_agent = MetricCalculationAgent(api_key, base_url)
-        self.rules_engine_agent = RulesEngineMetricCalculationAgent(api_key, base_url)
+        self.metric_agent = MetricCalculationAgent(api_key, base_url)
 
         # 创建工作流图
         self.workflow = self._create_workflow()
@@ -165,7 +163,6 @@ class CompleteAgentFlow:
             # 使用规划智能体做出决策
             decision = await plan_next_action(
                 question=state["question"],
-                industry=state["industry"],
                 current_state=state,
                 api_key=self.api_key
             )
@@ -202,10 +199,9 @@ class CompleteAgentFlow:
             # 生成大纲（支持重试机制）
             outline = await generate_report_outline(
                 question=state["question"],
-                industry=state["industry"],
                 sample_data=state["data_set"][:3],  # 使用前3个样本
                 api_key=self.api_key,
-                max_retries=1,  # 最多重试5次
+                max_retries=5,  # 最多重试5次
                 retry_delay=3.0  # 每次重试间隔3秒
             )
 
@@ -266,19 +262,12 @@ class CompleteAgentFlow:
             new_state["errors"].append(f"指标评估错误: {str(e)}")
             return convert_numpy_types(new_state)
 
+
     async def _metric_calculator_node(self, state: IntegratedWorkflowState) -> IntegratedWorkflowState:
         """指标计算节点"""
         try:
-            # 检查计算模式
-            use_rules_engine_only = state.get("use_rules_engine_only", False)
-            use_traditional_engine_only = state.get("use_traditional_engine_only", False)
-
-            if use_rules_engine_only:
-                print("🧮 正在执行规则引擎指标计算（专用模式）...")
-            elif use_traditional_engine_only:
-                print("🧮 正在执行传统引擎指标计算（专用模式）...")
-            else:
-                print("🧮 正在执行指标计算...")
+            # 使用传统引擎计算所有指标
+            print("🧮 正在执行传统引擎指标计算...")
 
             new_state = state.copy()
             pending_ids = state.get("pending_metric_ids", [])
@@ -311,32 +300,21 @@ class CompleteAgentFlow:
 
                     print(f"🧮 计算指标: {metric_id} - {metric_req.metric_name}")
 
-                    # 根据模式决定使用哪种计算方式
-                    if use_rules_engine_only:
-                        # 只使用规则引擎计算
-                        use_rules_engine = True
-                        print(f"   使用规则引擎模式")
-                    elif use_traditional_engine_only:
-                        # 只使用传统引擎计算
-                        use_rules_engine = False
-                        print(f"   使用传统引擎模式")
-                    else:
-                        # 自动选择计算方式：优先使用规则引擎，只在规则引擎不可用时使用传统计算
-                        use_rules_engine = True  # 默认使用规则引擎计算所有指标
+                    # 使用传统引擎计算指标
+                    use_traditional_engine = True
+                    print(f"   使用传统引擎模式")
 
-                    if use_rules_engine:
-                        # 使用规则引擎计算
-                        # 现在metric_id已经是知识ID，直接使用它作为配置名
-                        config_name = metric_id  # metric_id 已经是知识ID，如 "metric-分析账户数量"
+                    if use_traditional_engine:
+                        # 使用传统指标计算
+                        # 调用MetricCalculationAgent的calculate_metrics方法
+                        config_name = f"指标计算-{metric_req.metric_name}"  # 构建正确的配置文件名
                         intent_result = {
-                            "target_configs": [config_name],
+                            "target_configs": [config_name],  # 使用构建的配置名
                             "intent_category": "指标计算"
                         }
-                        print(f"   使用知识ID: {config_name}")
-                        results = await self.rules_engine_agent.calculate_metrics(intent_result)
+                        results = await self.metric_agent.calculate_metrics(intent_result)
                     else:
-                        # 使用传统指标计算（模拟）
-                        # 这里简化处理，实际应该根据配置文件调用相应的API
+                        # 备用：模拟计算结果
                         results = {
                             "success": True,
                             "results": [{
@@ -349,17 +327,25 @@ class CompleteAgentFlow:
                             }]
                         }
 
-                    # 处理计算结果
-                    for result in results.get("results", []):
-                        if result.get("result", {}).get("success"):
-                            # 计算成功
-                            new_state["computed_metrics"][metric_id] = result["result"]
-                            successful_calculations += 1
-                            print(f"✅ 指标 {metric_id} 计算成功")
-                        else:
-                            # 计算失败
-                            failed_calculations += 1
-                            print(f"❌ 指标 {metric_id} 计算失败")
+                    # 检查整体API调用是否成功
+                    if not results.get("success", False):
+                        # API调用失败
+                        failed_calculations += 1
+                        error_msg = results.get("message", "未知错误")
+                        print(f"❌ 指标 {metric_id} API调用失败: {error_msg}")
+                    else:
+                        # API调用成功，处理计算结果
+                        for result in results.get("results", []):
+                            if result.get("result", {}).get("success"):
+                                # 计算成功
+                                new_state["computed_metrics"][metric_id] = result["result"]
+                                successful_calculations += 1
+                                print(f"✅ 指标 {metric_id} 计算成功")
+                            else:
+                                # 计算失败
+                                failed_calculations += 1
+                                error_detail = result.get("error", "计算失败")
+                                print(f"❌ 指标 {metric_id} 计算失败: {error_detail}")
 
                     # 从待计算列表中移除（无论成功还是失败）
                     if metric_id in new_state["pending_metric_ids"]:
@@ -380,12 +366,7 @@ class CompleteAgentFlow:
             }
 
             # 添加消息
-            if use_rules_engine_only:
-                message_content = f"🧮 规则引擎指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败"
-            elif use_traditional_engine_only:
-                message_content = f"🧮 传统引擎指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败"
-            else:
-                message_content = f"🧮 指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败"
+            message_content = f"🧮 传统引擎指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败"
 
             new_state["messages"].append({
                 "role": "assistant",
@@ -393,12 +374,7 @@ class CompleteAgentFlow:
                 "timestamp": datetime.now().isoformat()
             })
 
-            if use_rules_engine_only:
-                print(f"✅ 规则引擎指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败")
-            elif use_traditional_engine_only:
-                print(f"✅ 传统引擎指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败")
-            else:
-                print(f"✅ 指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败")
+            print(f"✅ 传统引擎指标计算完成：{successful_calculations} 成功，{failed_calculations} 失败")
 
             return convert_numpy_types(new_state)
 
@@ -514,13 +490,12 @@ class CompleteAgentFlow:
         except:
             return "🤔 规划决策已完成"
 
-    async def run_workflow(self, question: str, industry: str, data: List[Dict[str, Any]], session_id: str = None, use_rules_engine_only: bool = False, use_traditional_engine_only: bool = False) -> Dict[str, Any]:
+    async def run_workflow(self, question: str, data: List[Dict[str, Any]], session_id: str = None, use_rules_engine_only: bool = False, use_traditional_engine_only: bool = False) -> Dict[str, Any]:
         """
         运行完整的工作流
 
         Args:
             question: 用户查询
-            industry: 行业
             data: 数据集
             session_id: 会话ID
             use_rules_engine_only: 是否只使用规则引擎指标计算
@@ -532,7 +507,6 @@ class CompleteAgentFlow:
         try:
             print("🚀 启动完整智能体工作流...")
             print(f"问题：{question}")
-            print(f"行业：{industry}")
             print(f"数据条数：{len(data)}")
 
             if use_rules_engine_only:
@@ -543,7 +517,7 @@ class CompleteAgentFlow:
                 print("计算模式：标准模式")
 
             # 创建初始状态
-            initial_state = create_initial_integrated_state(question, industry, data, session_id)
+            initial_state = create_initial_integrated_state(question, data, session_id)
 
             # 设置计算模式标记
             if use_rules_engine_only:
@@ -587,7 +561,7 @@ class CompleteAgentFlow:
 
 
 # 便捷函数
-async def run_complete_agent_flow(question: str, industry: str, data: List[Dict[str, Any]], api_key: str, session_id: str = None, use_rules_engine_only: bool = False, use_traditional_engine_only: bool = False) -> Dict[str, Any]:
+async def run_complete_agent_flow(question: str, data: List[Dict[str, Any]], api_key: str, session_id: str = None, use_rules_engine_only: bool = False, use_traditional_engine_only: bool = False) -> Dict[str, Any]:
     """
     运行完整智能体工作流的便捷函数
 
@@ -603,14 +577,14 @@ async def run_complete_agent_flow(question: str, industry: str, data: List[Dict[
         工作流结果
     """
     workflow = CompleteAgentFlow(api_key)
-    return await workflow.run_workflow(question, industry, data, session_id, use_rules_engine_only, use_traditional_engine_only)
+    return await workflow.run_workflow(question, data, session_id, use_rules_engine_only, use_traditional_engine_only)
 
 
 # 主函数用于测试
 async def main():
     """主函数：执行系统测试"""
-    print("🚀 执行CompleteAgentFlow系统测试")
-    print("=" * 50)
+    print("🚀 执行CompleteAgentFlow (No Rules Engine) 系统测试")
+    print("=" * 60)
 
     # 导入配置
     import config
@@ -628,14 +602,12 @@ async def main():
 
     print(f"📊 测试数据: {len(test_data)} 条记录")
 
-
     # 执行测试
     result = await run_complete_agent_flow(
-        question="请生成一份详细的农业经营贷流水分析报告，需要包含：1.总收入和总支出统计 2.收入笔数和支出笔数 3.各类型收入支出占比分析 4.交易对手收入支出TOP3排名 5.按月份的收入支出趋势分析 6.账户数量和交易时间范围统计 7.资金流入流出月度统计等全面指标",
-        industry = "农业",
+        question="执行流水分析任务",
         data=test_data,
         api_key=config.DEEPSEEK_API_KEY,
-        session_id="direct-test"
+        session_id="norule-test"
     )
 
     print(f"📋 结果: {'✅ 成功' if result.get('success') else '❌ 失败'}")
@@ -645,6 +617,8 @@ async def main():
         print(f"   规划步骤: {summary.get('planning_steps', 0)}")
         print(f"   指标计算: {summary.get('metrics_computed', 0)}")
         print("🎉 测试成功！")
+    else:
+        print(f"   错误: {result.get('error', 'Unknown')}")
 
 
 if __name__ == "__main__":

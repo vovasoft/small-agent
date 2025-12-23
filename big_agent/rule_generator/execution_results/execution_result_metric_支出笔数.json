@@ -1,0 +1,15 @@
+{
+  "rule_id": "metric-支出笔数",
+  "execution_time": 0.008901119232177734,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "expenseSummary": [
+      {
+        "totalExpenseCount": 150
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"expenseSummary\":[{\"totalExpenseCount\":150}]}"
+}

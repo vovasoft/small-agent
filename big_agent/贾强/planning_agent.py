@@ -128,25 +128,23 @@ class PlanningAgent:
 ### 决策规则（按顺序检查）
 1. 检查 outline_draft 是否为空 → 空则选择 generate_outline
 2. 检查 metrics_requirements 是否为空 → 空则选择 generate_outline
-3. 检查是否有待计算指标 → 有则选择 compute_metrics
-4. 所有指标都已计算完成 → 选择 finalize_report
-5. 如果无法理解需求 → 选择 clarify_requirements
+3. 计算指标覆盖率 = 已计算指标 / 总需求指标
+   - 覆盖率 < 0.8 → 选择 compute_metrics
+   - 覆盖率 ≥ 0.8 → 选择 finalize_report
+4. 如果无法理解需求 → 选择 clarify_requirements
 
 ### 重要原则
 - 大纲草稿已存在时，不要重复生成大纲
-- 决策为 compute_metrics 时，必须从状态信息中的"有效待计算指标ID列表"中选择
+- 决策为 compute_metrics 时，必须提供具体的指标ID列表
 - 确保 metrics_to_compute 是字符串数组格式
-- 确保指标ID与大纲中的global_metrics.metric_id完全一致
-- 从状态信息中的"有效待计算指标ID列表"中提取metric_id作为metrics_to_compute的值
+- 确保指标ID与大纲定义完全一致
 - 计算失败的指标可以重试最多3次
-- 绝对不要自己生成新的指标ID，必须严格使用状态信息中提供的已有指标ID
-- 如果状态信息中没有可用的指标ID，不要生成compute_metrics决策
 
 ### 输出字段说明
 - decision: 决策字符串
 - reasoning: 决策原因说明
 - next_actions: 动作列表（可选）
-- metrics_to_compute: 待计算指标ID列表，必须从状态信息中的可用指标ID中选择（决策为compute_metrics时必须提供）
+- metrics_to_compute: 待计算指标ID列表（决策为compute_metrics时必须提供）
 - priority_metrics: 优先级指标列表（前2-3个最重要的指标）
 - additional_requirements: 额外需求（可选）
 
@@ -223,22 +221,18 @@ class PlanningAgent:
                     # 如果已经是 dict 或其他允许的类型，保持不变
 
                 decision = PlanningDecision(**decision_data)
-
-                # 验证决策的合理性
-                if decision.decision == "compute_metrics":
-                    if not decision.metrics_to_compute:
-                        raise ValueError("AI决策缺少具体的指标ID")
-                    # 如果AI生成的指标ID明显是错误的（比如metric_001），使用默认逻辑
-                    if any(mid.startswith("metric_") and mid.replace("metric_", "").isdigit()
-                          for mid in decision.metrics_to_compute):
-                        raise ValueError("AI生成的指标ID格式不正确")
-
             else:
                 raise ValueError("No JSON found in response")
         except Exception as e:
             print(f"解析规划决策响应失败: {e}，使用默认决策")
             # 返回默认决策
-            decision = self._get_default_decision(current_state)
+            decision = PlanningDecision(
+                decision="generate_outline",
+                reasoning="解析响应失败，使用默认决策生成大纲",
+                next_actions=["生成报告大纲"],
+                metrics_to_compute=[],
+                priority_metrics=[]
+            )
 
         # 记录API调用结果
         content = response.content if hasattr(response, 'content') else str(response)
@@ -299,12 +293,6 @@ class PlanningAgent:
             if failed_attempts.get(mid, 0) < max_retry
         ]
 
-        # 获取可用的指标ID
-        available_metric_ids = []
-        if state.get('outline_draft') and state.get('outline_draft').get('global_metrics'):
-            available_metric_ids = [m.get('metric_id', '') for m in state['outline_draft']['global_metrics']]
-            available_metric_ids = [mid for mid in available_metric_ids if mid]  # 过滤空值
-
         return f"""当前状态评估：
 - 规划步骤: {state.get('planning_step', 0)}
 - 大纲版本: {state.get('outline_version', 0)}
@@ -313,10 +301,10 @@ class PlanningAgent:
 - 已计算指标数: {computed_count}
 - 指标覆盖率: {coverage:.2%}
 - 待计算指标数: {len(pending_ids)}
-- 有效待计算指标ID列表: {filtered_pending_ids}
-- 可用指标ID列表: {available_metric_ids}
+- 有效待计算指标数: {len(filtered_pending_ids)}
 - 失败尝试记录: {failed_attempts}
-"""
+
+建议下一步: {"计算指标" if coverage < 0.8 else "生成报告"}"""
 
 
 def analyze_current_state(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -394,25 +382,7 @@ async def plan_next_action(question: str, industry: str, current_state: Dict[str
     except Exception as e:
         print(f"⚠️ 规划决策出错: {e}，使用默认决策")
 
-        # 直接返回最基本的默认决策，避免复杂的默认决策逻辑
-        return PlanningDecision(
-            decision="finalize_report",
-            reasoning="规划决策失败，使用默认的报告生成决策",
-            next_actions=["生成最终报告"],
-            metrics_to_compute=[],
-            priority_metrics=[]
-        )
-
-    def _get_default_decision(self, current_state: Dict[str, Any]) -> PlanningDecision:
-        """
-        基于状态分析的默认决策逻辑
-
-        Args:
-            current_state: 当前状态信息
-
-        Returns:
-            默认规划决策
-        """
+        # 基于状态分析的默认决策
         state_analysis = analyze_current_state(current_state)
 
         if not state_analysis["has_outline"]:
@@ -424,7 +394,7 @@ async def plan_next_action(question: str, industry: str, current_state: Dict[str
                 priority_metrics=[]
             )
         elif state_analysis["coverage"] < 0.8 and state_analysis["valid_pending_metrics"]:
-            # 计算指标 - 使用实际的指标ID
+            # 计算指标
             metrics_to_compute = state_analysis["valid_pending_ids"][:5]  # 最多计算5个
             default_decision = PlanningDecision(
                 decision="compute_metrics",

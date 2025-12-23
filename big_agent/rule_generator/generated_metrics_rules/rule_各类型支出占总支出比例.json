@@ -1,0 +1,88 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-各类型支出占总支出比例",
+    "name": "各类型支出占总支出比例",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于不同支出类型在总支出中的占比情况 其中支...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-各类型支出占总支出比例",
+    "ruleType": 1,
+    "ruleDescription": "不同支出类型在总支出中的占比情况 其中支出字段是txdirection 类型字段是txsummary 金额字段是txamount",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "expenseProportion"
+    ],
+    "ruleContent": [
+      {
+        "type": "CONDITIONAL",
+        "sourceField": "transactions",
+        "resultField": "filteredExpenses",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "conditionGroups": [
+            {
+              "logic": "AND",
+              "conditions": [
+                {
+                  "field": "txDirection",
+                  "operator": "EQUALS",
+                  "value": "支出"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "GROUP_BY",
+        "sourceField": "filteredExpenses",
+        "resultField": "groupedExpenses",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "groupByFields": [
+            "txSummary"
+          ],
+          "groupAggregations": [
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "SUM",
+              "sourceField": "txAmount",
+              "resultField": "totalAmount"
+            }
+          ]
+        }
+      },
+      {
+        "type": "PROPORTION",
+        "sourceField": "groupedExpenses",
+        "resultField": "expenseProportion",
+        "primaryValue": "totalAmount",
+        "secondaryValue": "txSummary",
+        "configuration": {}
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}

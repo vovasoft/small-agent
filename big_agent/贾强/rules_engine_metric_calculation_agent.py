@@ -35,9 +35,9 @@ API接口：
 POST http://localhost:8081/api/rules/executeKnowledge
 请求体：
 {
-    "id": "知识ID",
+    "id": "demo-黑色金属-0201",
     "input": {
-        "动态字段名": [...]  // 根据知识的inputField字段动态确定，如"transactions"或"resultTag"
+        "resultTag": [...]
     }
 }
 
@@ -76,9 +76,6 @@ class RulesEngineMetricCalculationAgent:
 
         # 加载配置文件
         self.configs = self._load_configs()
-
-        # 获取可用的知识元数据
-        self.available_knowledge = self._load_available_knowledge()
 
         # 加载数据文件映射
         self.data_files = self._load_data_files()
@@ -124,24 +121,15 @@ class RulesEngineMetricCalculationAgent:
 
         return None
 
-    def _load_table_data(self, data_file_path: str) -> List[Dict[str, Any]]:
+    def _load_table_data(self, data_file_path: str) -> Dict[str, Any]:
         """加载数据文件中的JSON数据"""
         try:
             with open(data_file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                if isinstance(data, list):
-                    return data
-                elif isinstance(data, dict):
-                    # 如果是字典，尝试提取其中的数组数据
-                    for key, value in data.items():
-                        if isinstance(value, list):
-                            return value
-                    return []
-                else:
-                    return []
+                return data if isinstance(data, dict) else {"resultTag": []}
         except Exception as e:
             print(f"加载数据文件 {data_file_path} 失败: {e}")
-            return []
+            return {"resultTag": []}
 
     def _load_configs(self) -> Dict[str, Dict]:
         """加载所有规则引擎配置文件"""
@@ -160,60 +148,6 @@ class RulesEngineMetricCalculationAgent:
                         print(f"加载规则引擎配置文件 {file} 失败: {e}")
 
         return configs
-
-    def _load_available_knowledge(self) -> List[Dict[str, Any]]:
-        """
-        从规则引擎获取可用的知识元数据
-
-        Returns:
-            知识元数据列表，包含id、description和inputField
-        """
-        try:
-            url = "http://localhost:8081/api/rules/getKnowledgeMeta"
-            headers = {
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Connection": "keep-alive",
-                "Content-Type": "application/json",
-                "User-Agent": "PostmanRuntime-ApipostRuntime/1.1.0"
-            }
-
-            response = requests.post(url, headers=headers, json={}, timeout=30)
-
-            if response.status_code == 200:
-                knowledge_meta = response.json()
-                if isinstance(knowledge_meta, list):
-                    print(f"✅ 成功获取 {len(knowledge_meta)} 个知识元数据")
-                    return knowledge_meta
-                else:
-                    print(f"⚠️ 知识元数据格式异常: {knowledge_meta}")
-                    return []
-            else:
-                print(f"❌ 获取知识元数据失败，状态码: {response.status_code}")
-                print(f"响应内容: {response.text}")
-                return []
-
-        except Exception as e:
-            print(f"❌ 获取知识元数据时发生错误: {str(e)}")
-            return []
-
-    def _get_input_field_for_knowledge(self, knowledge_id: str) -> str:
-        """
-        根据知识ID获取对应的inputField字段名
-
-        Args:
-            knowledge_id: 知识ID
-
-        Returns:
-            inputField字段名，默认为"transactions"
-        """
-        for knowledge in self.available_knowledge:
-            if knowledge.get("id") == knowledge_id:
-                input_field = knowledge.get("inputField", "transactions")
-                print(f"🔗 知识 {knowledge_id} 使用输入字段: {input_field}")
-                return input_field
-        print(f"⚠️ 未找到知识 {knowledge_id} 的输入字段，使用默认值: transactions")
-        return "transactions"  # 默认值
 
     async def calculate_metrics(self, intent_result: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -238,16 +172,8 @@ class RulesEngineMetricCalculationAgent:
 
             for config_name in target_configs:
                 if config_name in self.configs:
-                    # 使用传统的JSON配置文件方式
                     config = self.configs[config_name]
                     result = await self._call_rules_engine_api(config, intent_result, config_name)
-                    results.append({
-                        "config_name": config_name,
-                        "result": result
-                    })
-                elif config_name.startswith("metric-"):
-                    # 直接使用知识ID调用API，无需配置文件
-                    result = await self._call_rules_engine_api_by_knowledge_id(config_name, intent_result)
                     results.append({
                         "config_name": config_name,
                         "result": result
@@ -255,7 +181,7 @@ class RulesEngineMetricCalculationAgent:
                 else:
                     results.append({
                         "config_name": config_name,
-                        "error": f"配置文件 {config_name} 不存在，且不是有效的知识ID"
+                        "error": f"配置文件 {config_name} 不存在"
                     })
 
             return {
@@ -290,8 +216,7 @@ class RulesEngineMetricCalculationAgent:
 
             # 规则引擎API配置
             method = "POST"
-            url = "http://localhost:8081/api/rules/executeKnowledge"
-            # url = "http://10.192.72.11:31809/api/rules/executeKnowledge"
+            url = "http://10.192.72.11:31809/api/rules/executeKnowledge"
             headers = {
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -572,333 +497,6 @@ class RulesEngineMetricCalculationAgent:
         }
 
         return {"json": request_data}
-
-    async def _call_rules_engine_api_by_knowledge_id(self, knowledge_id: str, intent_result: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        直接通过知识ID调用规则引擎API
-
-        Args:
-            knowledge_id: 知识ID，如 "metric-分析账户数量"
-            intent_result: 意图识别结果（用于获取数据文件信息）
-
-        Returns:
-            API调用结果
-        """
-        # 记录API调用开始
-        start_time = datetime.now()
-
-        # 规则引擎API配置
-        method = "POST"
-        url = "http://localhost:8081/api/rules/executeKnowledge"
-        headers = {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Connection": "keep-alive",
-            "Content-Type": "application/json",
-            "User-Agent": "PostmanRuntime-ApipostRuntime/1.1.0"
-        }
-        timeout = 180  # 3分钟超时
-
-        try:
-            # 根据知识ID获取正确的输入字段名
-            input_field_name = self._get_input_field_for_knowledge(knowledge_id)
-
-            # 构造请求数据 - 直接使用默认数据文件
-            # 从intent_result中获取数据文件名，如果没有则使用默认的农业数据
-            input_filename = intent_result.get("data_file", "加工数据-流水分析-农业打标.json")
-
-            # 加载对应的数据文件
-            input_data = {}
-            if input_filename:
-                data_file_path = self._select_data_file(input_filename)
-                if data_file_path:
-                    raw_data = self._load_table_data(data_file_path)
-                    # 使用正确的字段名包装数据
-                    input_data = {input_field_name: raw_data}
-                else:
-                    print(f"警告：找不到数据文件: {input_filename}")
-                    input_data = {input_field_name: []}
-
-            # 构造API请求体
-            request_data = {
-                "id": knowledge_id,  # 直接使用知识ID
-                "input": input_data
-            }
-
-            # 调用API
-            json_data = request_data
-            response = requests.post(url, headers=headers, json=json_data, timeout=timeout)
-
-            # 处理响应（复用现有的响应处理逻辑）
-            if response.status_code == 200:
-                try:
-                    response_data = response.json()
-
-                    # 记录API调用结果
-                    end_time = datetime.now()
-                    call_id = f"rules_api_{knowledge_id}_{'{:.2f}'.format((end_time - start_time).total_seconds())}"
-                    api_call_info = {
-                        "call_id": call_id,
-                        "timestamp": end_time.isoformat(),
-                        "agent": "RulesEngineMetricCalculationAgent",
-                        "api_endpoint": url,
-                        "config_name": knowledge_id,
-                        "request": {
-                            "method": method,
-                            "url": url,
-                            "headers": headers,
-                            "json_data": json_data,
-                            "start_time": start_time.isoformat()
-                        },
-                        "response": {
-                            "status_code": response.status_code,
-                            "data": response_data,
-                            "end_time": end_time.isoformat(),
-                            "duration": (end_time - start_time).total_seconds()
-                        },
-                        "success": True
-                    }
-                    self.api_calls.append(api_call_info)
-
-                    # 保存API结果到文件
-                    api_results_dir = "api_results"
-                    os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
-                    filepath = os.path.join(api_results_dir, filename)
-
-                    try:
-                        with open(filepath, 'w', encoding='utf-8') as f:
-                            json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                        print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
-                    except Exception as e:
-                        print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
-
-                    return {
-                        "success": True,
-                        "data": response_data,
-                        "status_code": response.status_code
-                    }
-                except json.JSONDecodeError:
-                    # 记录JSON解析失败的API调用
-                    end_time = datetime.now()
-                    call_id = f"rules_api_{knowledge_id}_{'{:.2f}'.format((end_time - start_time).total_seconds())}"
-                    api_call_info = {
-                        "call_id": call_id,
-                        "timestamp": end_time.isoformat(),
-                        "agent": "RulesEngineMetricCalculationAgent",
-                        "api_endpoint": url,
-                        "config_name": knowledge_id,
-                        "request": {
-                            "method": method,
-                            "url": url,
-                            "headers": headers,
-                            "json_data": json_data,
-                            "start_time": start_time.isoformat()
-                        },
-                        "response": {
-                            "status_code": response.status_code,
-                            "data": response.text,
-                            "error": "JSON解析失败",
-                            "end_time": end_time.isoformat(),
-                            "duration": (end_time - start_time).total_seconds()
-                        },
-                        "success": False
-                    }
-                    self.api_calls.append(api_call_info)
-
-                    # 保存API结果到文件
-                    api_results_dir = "api_results"
-                    os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
-                    filepath = os.path.join(api_results_dir, filename)
-
-                    try:
-                        with open(filepath, 'w', encoding='utf-8') as f:
-                            json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                        print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
-                    except Exception as e:
-                        print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
-
-                    return {
-                        "success": True,
-                        "data": response.text,
-                        "status_code": response.status_code
-                    }
-            else:
-                # 记录失败的API调用
-                end_time = datetime.now()
-                call_id = f"rules_api_{knowledge_id}_{'{:.2f}'.format((end_time - start_time).total_seconds())}"
-                api_call_info = {
-                    "call_id": call_id,
-                    "timestamp": end_time.isoformat(),
-                    "agent": "RulesEngineMetricCalculationAgent",
-                    "api_endpoint": url,
-                    "config_name": knowledge_id,
-                    "request": {
-                        "method": method,
-                        "url": url,
-                        "headers": headers,
-                        "json_data": json_data,
-                        "start_time": start_time.isoformat()
-                    },
-                    "response": {
-                        "status_code": response.status_code,
-                        "error": response.text,
-                        "end_time": end_time.isoformat(),
-                        "duration": (end_time - start_time).total_seconds()
-                    },
-                    "success": False
-                }
-                self.api_calls.append(api_call_info)
-
-                # 保存API结果到文件
-                api_results_dir = "api_results"
-                os.makedirs(api_results_dir, exist_ok=True)
-                filename = f"{call_id}.json"
-                filepath = os.path.join(api_results_dir, filename)
-
-                try:
-                    with open(filepath, 'w', encoding='utf-8') as f:
-                        json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                    print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
-                except Exception as e:
-                    print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
-
-                return {
-                    "success": False,
-                    "message": f"规则引擎API调用失败，状态码: {response.status_code}",
-                    "response": response.text
-                }
-
-        except requests.exceptions.Timeout:
-            # 记录API调用结果（超时）
-            end_time = datetime.now()
-            call_id = f"rules_api_{knowledge_id}_{'{:.2f}'.format((end_time - start_time).total_seconds())}"
-            api_call_info = {
-                "call_id": call_id,
-                "timestamp": end_time.isoformat(),
-                "agent": "RulesEngineMetricCalculationAgent",
-                "api_endpoint": url,
-                "config_name": knowledge_id,
-                "request": {
-                    "method": method,
-                    "url": url,
-                    "headers": headers,
-                    "json_data": json_data if 'json_data' in locals() else None,
-                    "start_time": start_time.isoformat()
-                },
-                "response": {
-                    "error": "API调用超时",
-                    "end_time": end_time.isoformat(),
-                    "duration": (end_time - start_time).total_seconds()
-                },
-                "success": False
-            }
-            self.api_calls.append(api_call_info)
-
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
-
-            return {
-                "success": False,
-                "message": "规则引擎API调用超时"
-            }
-        except requests.exceptions.RequestException as e:
-            # 记录API调用结果（请求异常）
-            end_time = datetime.now()
-            call_id = f"rules_api_{knowledge_id}_{'{:.2f}'.format((end_time - start_time).total_seconds())}"
-            api_call_info = {
-                "call_id": call_id,
-                "timestamp": end_time.isoformat(),
-                "agent": "RulesEngineMetricCalculationAgent",
-                "api_endpoint": url,
-                "config_name": knowledge_id,
-                "request": {
-                    "method": method,
-                    "url": url,
-                    "headers": headers,
-                    "json_data": json_data if 'json_data' in locals() else None,
-                    "start_time": start_time.isoformat()
-                },
-                "response": {
-                    "error": str(e),
-                    "end_time": end_time.isoformat(),
-                    "duration": (end_time - start_time).total_seconds()
-                },
-                "success": False
-            }
-            self.api_calls.append(api_call_info)
-
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
-
-            return {
-                "success": False,
-                "message": f"规则引擎API调用异常: {str(e)}"
-            }
-        except Exception as e:
-            # 记录API调用结果（其他异常）
-            end_time = datetime.now()
-            call_id = f"rules_api_{knowledge_id}_{'{:.2f}'.format((end_time - start_time).total_seconds())}"
-            api_call_info = {
-                "call_id": call_id,
-                "timestamp": end_time.isoformat(),
-                "agent": "RulesEngineMetricCalculationAgent",
-                "api_endpoint": url,
-                "config_name": knowledge_id,
-                "request": {
-                    "method": method,
-                    "url": url,
-                    "headers": headers,
-                    "json_data": json_data if 'json_data' in locals() else None,
-                    "start_time": start_time.isoformat()
-                },
-                "response": {
-                    "error": str(e),
-                    "end_time": end_time.isoformat(),
-                    "duration": (end_time - start_time).total_seconds()
-                },
-                "success": False
-            }
-            self.api_calls.append(api_call_info)
-
-            # 保存API结果到文件
-            api_results_dir = "api_results"
-            os.makedirs(api_results_dir, exist_ok=True)
-            filename = f"{call_id}.json"
-            filepath = os.path.join(api_results_dir, filename)
-
-            try:
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(api_call_info, f, ensure_ascii=False, indent=2)
-                print(f"[RULES_API_RESULT] 保存规则引擎API结果文件: {filepath}")
-            except Exception as e:
-                print(f"[ERROR] 保存规则引擎API结果文件失败: {filepath}, 错误: {str(e)}")
-
-            return {
-                "success": False,
-                "message": f"处理规则引擎API调用时发生错误: {str(e)}"
-            }
 
     def get_available_configs(self) -> List[str]:
         """获取所有可用的规则引擎配置文件名"""

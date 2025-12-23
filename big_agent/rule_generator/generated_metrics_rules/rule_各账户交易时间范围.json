@@ -1,0 +1,65 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-各账户交易时间范围",
+    "name": "各账户交易时间范围",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于不同账户交易的起止时间 其中账户字段是t...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-各账户交易时间范围",
+    "ruleType": 1,
+    "ruleDescription": "不同账户交易的起止时间 其中账户字段是txcounterparty 日期字段是txdate",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "groupedByCounterparty"
+    ],
+    "ruleContent": [
+      {
+        "type": "GROUP_BY",
+        "sourceField": "transactions",
+        "resultField": "groupedByCounterparty",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "groupByFields": [
+            "txCounterparty"
+          ],
+          "groupAggregations": [
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "MIN",
+              "sourceField": "txDate",
+              "resultField": "startDate"
+            },
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "MAX",
+              "sourceField": "txDate",
+              "resultField": "endDate"
+            }
+          ]
+        }
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}

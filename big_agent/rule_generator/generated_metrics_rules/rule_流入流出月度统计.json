@@ -1,0 +1,73 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-流入流出月度统计",
+    "name": "流入流出月度统计",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于按月份与交易渠道统计资金流入与流出情况 ...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-流入流出月度统计",
+    "ruleType": 1,
+    "ruleDescription": "按月份与交易渠道统计资金流入与流出情况 其中日期字段是txdate 方向字段是txdirection 金额字段是txamount",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "sortedResult"
+    ],
+    "ruleContent": [
+      {
+        "type": "GROUP_BY",
+        "sourceField": "transactions",
+        "resultField": "groupedByMonthAndDirection",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "groupByFields": [
+            "txDate",
+            "txDirection"
+          ],
+          "groupAggregations": [
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "SUM",
+              "sourceField": "txAmount",
+              "resultField": "totalAmount"
+            },
+            {
+              "type": "AGGREGATE",
+              "primaryValue": "COUNT",
+              "sourceField": "txId",
+              "resultField": "transactionCount"
+            }
+          ]
+        }
+      },
+      {
+        "type": "SORT",
+        "sourceField": "groupedByMonthAndDirection",
+        "resultField": "sortedResult",
+        "primaryValue": "txDate",
+        "secondaryValue": 1
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}

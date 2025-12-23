@@ -1,0 +1,15 @@
+{
+  "rule_id": "metric-总收入",
+  "execution_time": 0.03473997116088867,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "totalIncome": [
+      {
+        "totalAmount": 392000.0
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"totalIncome\":[{\"totalAmount\":392000.0}]}"
+}

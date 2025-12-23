@@ -1,0 +1,178 @@
+{
+  "rule_id": "metric-各类型支出占总支出比例",
+  "execution_time": 0.010362863540649414,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "expenseProportion": [
+      {
+        "proportions": [
+          {
+            "percentage": 8.132322536181944,
+            "count": 1,
+            "category": "员工薪酬发放",
+            "value": 11800.0
+          },
+          {
+            "percentage": 7.994486560992418,
+            "count": 1,
+            "category": "员工薪酬",
+            "value": 11600.0
+          },
+          {
+            "percentage": 7.856650585802895,
+            "count": 1,
+            "category": "化肥采购",
+            "value": 11400.0
+          },
+          {
+            "percentage": 6.685044796691937,
+            "count": 1,
+            "category": "土地流转费",
+            "value": 9700.0
+          },
+          {
+            "percentage": 6.685044796691937,
+            "count": 1,
+            "category": "种子采购",
+            "value": 9700.0
+          },
+          {
+            "percentage": 6.547208821502412,
+            "count": 1,
+            "category": "化肥采购支付",
+            "value": 9500.0
+          },
+          {
+            "percentage": 4.824259131633356,
+            "count": 1,
+            "category": "保险续保",
+            "value": 7000.0
+          },
+          {
+            "percentage": 4.617505168849069,
+            "count": 1,
+            "category": "农业保险",
+            "value": 6700.0
+          },
+          {
+            "percentage": 4.479669193659546,
+            "count": 1,
+            "category": "农机保养",
+            "value": 6500.0
+          },
+          {
+            "percentage": 4.34183321847002,
+            "count": 1,
+            "category": "种子采购支付",
+            "value": 6300.0
+          },
+          {
+            "percentage": 3.790489317711923,
+            "count": 1,
+            "category": "农机维修",
+            "value": 5500.0
+          },
+          {
+            "percentage": 3.7215713301171607,
+            "count": 1,
+            "category": "冷链运输",
+            "value": 5400.0
+          },
+          {
+            "percentage": 3.5837353549276365,
+            "count": 1,
+            "category": "农机保养支付",
+            "value": 5200.0
+          },
+          {
+            "percentage": 3.135768435561682,
+            "count": 1,
+            "category": "土地流转支付",
+            "value": 4550.0
+          },
+          {
+            "percentage": 3.1013094417643003,
+            "count": 1,
+            "category": "冷链运输费",
+            "value": 4500.0
+          },
+          {
+            "percentage": 2.6878015161957274,
+            "count": 1,
+            "category": "农业保险续保",
+            "value": 3900.0
+          },
+          {
+            "percentage": 2.3087525844245347,
+            "count": 1,
+            "category": "冷链运输服务费",
+            "value": 3350.0
+          },
+          {
+            "percentage": 2.2742935906271535,
+            "count": 1,
+            "category": "农机维修支付",
+            "value": 3300.0
+          },
+          {
+            "percentage": 2.067539627842867,
+            "count": 1,
+            "category": "化肥采购 (复合肥)",
+            "value": 3000.0
+          },
+          {
+            "percentage": 2.067539627842867,
+            "count": 1,
+            "category": "冷链运输服务",
+            "value": 3000.0
+          },
+          {
+            "percentage": 1.9986216402481045,
+            "count": 1,
+            "category": "饲料采购",
+            "value": 2900.0
+          },
+          {
+            "percentage": 1.6540317022742934,
+            "count": 1,
+            "category": "农机维修保养",
+            "value": 2400.0
+          },
+          {
+            "percentage": 1.2405237767057202,
+            "count": 1,
+            "category": "土地流转费支付",
+            "value": 1800.0
+          },
+          {
+            "percentage": 1.1716057891109581,
+            "count": 1,
+            "category": "农机保养费用",
+            "value": 1700.0
+          },
+          {
+            "percentage": 1.1026878015161956,
+            "count": 1,
+            "category": "种子采购 (玉米种子)",
+            "value": 1600.0
+          },
+          {
+            "percentage": 0.9648518263266712,
+            "count": 1,
+            "category": "饲料采购支付",
+            "value": 1400.0
+          },
+          {
+            "percentage": 0.9648518263266712,
+            "count": 1,
+            "category": "种子采购 (水稻种子)",
+            "value": 1400.0
+          }
+        ]
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"expenseProportion\":[{\"proportions\":[{\"percentage\":8.132322536181944,\"count\":1,\"category\":\"员工薪酬发放\",\"value\":11800.0},{\"percentage\":7.994486560992418,\"count\":1,\"category\":\"员工薪酬\",\"value\":11600.0},{\"percentage\":7.856650585802895,\"count\":1,\"category\":\"化肥采购\",\"value\":11400.0},{\"percentage\":6.685044796691937,\"count\":1,\"category\":\"土地流转费\",\"value\":9700.0},{\"percentage\":6.685044796691937,\"count\":1,\"category\":\"种子采购\",\"value\":9700.0},{\"percentage\":6.547208821502412,\"count\":1,\"category\":\"化肥采购支付\",\"value\":9500.0},{\"percentage\":4.824259131633356,\"count\":1,\"category\":\"保险续保\",\"value\":7000.0},{\"percentage\":4.617505168849069,\"count\":1,\"category\":\"农业保险\",\"value\":6700.0},{\"percentage\":4.479669193659546,\"count\":1,\"category\":\"农机保养\",\"value\":6500.0},{\"percentage\":4.34183321847002,\"count\":1,\"category\":\"种子采购支付\",\"value\":6300.0},{\"percentage\":3.790489317711923,\"count\":1,\"category\":\"农机维修\",\"value\":5500.0},{\"percentage\":3.7215713301171607,\"count\":1,\"category\":\"冷链运输\",\"value\":5400.0},{\"percentage\":3.5837353549276365,\"count\":1,\"category\":\"农机保养支付\",\"value\":5200.0},{\"percentage\":3.135768435561682,\"count\":1,\"category\":\"土地流转支付\",\"value\":4550.0},{\"percentage\":3.1013094417643003,\"count\":1,\"category\":\"冷链运输费\",\"value\":4500.0},{\"percentage\":2.6878015161957274,\"count\":1,\"category\":\"农业保险续保\",\"value\":3900.0},{\"percentage\":2.3087525844245347,\"count\":1,\"category\":\"冷链运输服务费\",\"value\":3350.0},{\"percentage\":2.2742935906271535,\"count\":1,\"category\":\"农机维修支付\",\"value\":3300.0},{\"percentage\":2.067539627842867,\"count\":1,\"category\":\"化肥采购 (复合肥)\",\"value\":3000.0},{\"percentage\":2.067539627842867,\"count\":1,\"category\":\"冷链运输服务\",\"value\":3000.0},{\"percentage\":1.9986216402481045,\"count\":1,\"category\":\"饲料采购\",\"value\":2900.0},{\"percentage\":1.6540317022742934,\"count\":1,\"category\":\"农机维修保养\",\"value\":2400.0},{\"percentage\":1.2405237767057202,\"count\":1,\"category\":\"土地流转费支付\",\"value\":1800.0},{\"percentage\":1.1716057891109581,\"count\":1,\"category\":\"农机保养费用\",\"value\":1700.0},{\"percentage\":1.1026878015161956,\"count\":1,\"category\":\"种子采购 (玉米种子)\",\"value\":1600.0},{\"percentage\":0.9648518263266712,\"count\":1,\"category\":\"饲料采购支付\",\"value\":1400.0},{\"percentage\":0.9648518263266712,\"count\":1,\"category\":\"种子采购 (水稻种子)\",\"value\":1400.0}]}]}"
+}

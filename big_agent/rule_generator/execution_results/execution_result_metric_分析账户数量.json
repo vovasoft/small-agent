@@ -1,0 +1,96 @@
+{
+  "rule_id": "metric-分析账户数量",
+  "execution_time": 0.01275014877319336,
+  "success": true,
+  "timestamp": "2025-12-23 15:49:45",
+  "result": {
+    "accountCountResult": [
+      {
+        "txCounterparty": "雨润食品",
+        "accountCount": 9
+      },
+      {
+        "txCounterparty": "正大饲料公司",
+        "accountCount": 21
+      },
+      {
+        "txCounterparty": "京东冷链",
+        "accountCount": 10
+      },
+      {
+        "txCounterparty": "太平洋保险",
+        "accountCount": 11
+      },
+      {
+        "txCounterparty": "双汇食品集团",
+        "accountCount": 12
+      },
+      {
+        "txCounterparty": "北方农机服务",
+        "accountCount": 21
+      },
+      {
+        "txCounterparty": "绿源农产品公司",
+        "accountCount": 20
+      },
+      {
+        "txCounterparty": "员工个人账户",
+        "accountCount": 21
+      },
+      {
+        "txCounterparty": "顺丰冷链物流",
+        "accountCount": 11
+      },
+      {
+        "txCounterparty": "金穗粮食贸易公司",
+        "accountCount": 19
+      },
+      {
+        "txCounterparty": "丰收农资连锁",
+        "accountCount": 19
+      },
+      {
+        "txCounterparty": "中化化肥公司",
+        "accountCount": 19
+      },
+      {
+        "txCounterparty": "省农业厅",
+        "accountCount": 11
+      },
+      {
+        "txCounterparty": "平安保险",
+        "accountCount": 10
+      },
+      {
+        "txCounterparty": "永辉超市",
+        "accountCount": 9
+      },
+      {
+        "txCounterparty": "市农业农村局",
+        "accountCount": 13
+      },
+      {
+        "txCounterparty": "中种农业科技",
+        "accountCount": 21
+      },
+      {
+        "txCounterparty": "同仁堂药业",
+        "accountCount": 12
+      },
+      {
+        "txCounterparty": "康恩贝药业",
+        "accountCount": 9
+      },
+      {
+        "txCounterparty": "社区生鲜店",
+        "accountCount": 4
+      },
+      {
+        "txCounterparty": "村委会",
+        "accountCount": 20
+      }
+    ]
+  },
+  "error": null,
+  "raw_response": "{\"accountCountResult\":[{\"txCounterparty\":\"雨润食品\",\"accountCount\":9},{\"txCounterparty\":\"正大饲料公司\",\"accountCount\":21},{\"txCounterparty\":\"京东冷链\",\"accountCount\":10},{\"txCounterparty\":\"太平洋保险\",\"accountCount\":11},{\"txCounterparty\":\"双汇食品集团\",\"accountCount\":12},{\"txCounterparty\":\"北方农机服务\",\"accountCount\":21},{\"txCounterparty\":\"绿源农产品公司\",\"accountCount\":20},{\"txCounterparty\":\"员工个人账户\",\"accountCount\":21},{\"txCounterparty\":\"顺丰冷链物流\",\"accountCount\":11},{\"txCounterparty\":\"金穗粮食贸易公司\",\"accountCount\":19},{\"txCounterparty\":\"丰收农资连锁\",\"accountCount\":19},{\"txCounterparty\":\"中化化肥公司\",\"accountCount\":19},{\"txCounterparty\":\"省农业厅\",\"accountCount\":11},{\"txCounterparty\":\"平安保险\",\"accountCount\":10},{\"txCounterparty\":\"永辉超市\",\"accountCount\":9},{\"txCounterparty\":\"市农业农村局\",\"accountCount\":13},{\"txCounterparty\":\"中种农业科技\",\"accountCount\":21},{\"txCounterparty\":\"同仁堂药业\",\"accountCount\":12},{\"txCounterparty\":\"康恩贝药业\",\"accountCount\":9},{\"txCounterparty\":\"社区生鲜店\",\"accountCount\":4},{\"txCounterparty\":\"村委会\",\"accountCount\":20}]}"
+}

@@ -1,0 +1,68 @@
+{
+  "decisionKnowledge": {
+    "id": "metric-收入数据时间范围",
+    "name": "收入数据时间范围",
+    "zoneId": "kz_third_001",
+    "systemId": "ks_001",
+    "treeId": "kt_second_001",
+    "factorDescription": "基于流水数据中类型为收入覆盖的起止时间 其中...的银行流水分类决策因子",
+    "businessTags": "打标,分类",
+    "version": "v1.0",
+    "supportKnowledgeRefs": [
+      "经营贷",
+      "分组计算"
+    ],
+    "publisher": "system",
+    "status": 2,
+    "applicationStatus": 2,
+    "operator": "system"
+  },
+  "ruleDefinition": {
+    "name": "rule-收入数据时间范围",
+    "ruleType": 1,
+    "ruleDescription": "流水数据中类型为收入覆盖的起止时间 其中收入字段是txdirection 日期字段是txdate",
+    "inputSchema": [
+      "input"
+    ],
+    "outputSchema": [
+      "timeRangeResult"
+    ],
+    "ruleContent": [
+      {
+        "type": "CONDITIONAL",
+        "sourceField": "transactions",
+        "resultField": "filteredTransactions",
+        "primaryValue": "",
+        "secondaryValue": "",
+        "configuration": {
+          "conditionGroups": [
+            {
+              "logic": "AND",
+              "conditions": [
+                {
+                  "field": "txDirection",
+                  "operator": "EQUALS",
+                  "value": "收入"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "TIME_RANGE",
+        "sourceField": "filteredTransactions",
+        "resultField": "timeRangeResult",
+        "primaryValue": "txDate",
+        "secondaryValue": "",
+        "configuration": {}
+      }
+    ],
+    "priority": 1,
+    "enabled": true,
+    "version": "v1.0",
+    "status": 2,
+    "operator": "system",
+    "isDeleted": 0
+  }
+}
