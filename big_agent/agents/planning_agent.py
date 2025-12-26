@@ -1,31 +1,3 @@
-"""
-规划Agent (Planning Agent)
-=========================
-
-此Agent负责分析当前状态并做出智能决策，决定下一步行动。
-
-核心功能：
-1. 状态评估：分析大纲、指标计算进度和完整性
-2. 决策制定：决定生成大纲、计算指标、完成报告或澄清需求
-3. 优先级排序：确定最关键的任务和指标
-4. 流程控制：管理整个报告生成工作流的执行顺序
-
-决策逻辑：
-- 大纲为空 → 生成大纲
-- 指标覆盖率 < 80% → 计算指标
-- 指标覆盖率 ≥ 80% → 生成报告
-- 需求模糊 → 澄清需求
-
-技术实现：
-- 使用LangChain和结构化输出
-- 支持异步处理
-- 智能状态评估
-- 灵活的决策机制
-
-作者: Big Agent Team
-版本: 1.0.0
-创建时间: 2024-12-20
-"""
 
 from typing import List, Dict, Optional, Any, Union
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -119,11 +91,9 @@ class PlanningAgent:
         return ChatPromptTemplate.from_messages([
             ("system", """你是报告规划总控智能体，核心职责是精准分析当前状态并决定下一步行动。
 
-### 决策选项（四选一）
+### 决策选项（二选一）
 1. generate_outline：大纲未生成或大纲无效
-2. compute_metrics：大纲已生成但指标未完成（覆盖率<80%）
-3. finalize_report：指标覆盖率≥80%，信息充足
-4. clarify_requirements：用户需求模糊，缺少关键信息
+2. compute_metrics：大纲已生成但指标未完成
 
 ### 决策规则（按顺序检查）
 1. 检查 outline_draft 是否为空 → 空则选择 generate_outline
@@ -145,10 +115,8 @@ class PlanningAgent:
 ### 输出字段说明
 - decision: 决策字符串
 - reasoning: 决策原因说明
-- next_actions: 动作列表（可选）
-- metrics_to_compute: 待计算指标ID列表，必须从状态信息中的可用指标ID中选择（决策为compute_metrics时必须提供）
-- priority_metrics: 优先级指标列表（前2-3个最重要的指标）
-- additional_requirements: 额外需求（可选）
+- metrics_to_compute: 待计算指标ID列表，必须从状态信息中的"有效待计算指标ID列表"中选择。选择所有可用指标，除非指标数量过多（>10个）需要分批计算
+- priority_metrics: 优先级指标列表（前2-3个最重要的指标），从metrics_to_compute中选择
 
 必须输出有效的JSON格式！"""),
 
@@ -266,7 +234,8 @@ class PlanningAgent:
         # 保存API结果到文件
         api_results_dir = "api_results"
         os.makedirs(api_results_dir, exist_ok=True)
-        filename = f"{call_id}.json"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{timestamp}_{call_id}.json"
         filepath = os.path.join(api_results_dir, filename)
 
         try:
@@ -301,9 +270,10 @@ class PlanningAgent:
 
         # 获取可用的指标ID
         available_metric_ids = []
-        if state.get('outline_draft') and state.get('outline_draft').get('global_metrics'):
-            available_metric_ids = [m.get('metric_id', '') for m in state['outline_draft']['global_metrics']]
-            available_metric_ids = [mid for mid in available_metric_ids if mid]  # 过滤空值
+        outline_draft = state.get('outline_draft')
+        if outline_draft and outline_draft.global_metrics:
+            available_metric_ids = [m.metric_id for m in outline_draft.global_metrics if m.metric_id]
+        
 
         return f"""当前状态评估：
 - 规划步骤: {state.get('planning_step', 0)}
@@ -403,53 +373,4 @@ async def plan_next_action(question: str, industry: str, current_state: Dict[str
             priority_metrics=[]
         )
 
-    def _get_default_decision(self, current_state: Dict[str, Any]) -> PlanningDecision:
-        """
-        基于状态分析的默认决策逻辑
-
-        Args:
-            current_state: 当前状态信息
-
-        Returns:
-            默认规划决策
-        """
-        state_analysis = analyze_current_state(current_state)
-
-        if not state_analysis["has_outline"]:
-            default_decision = PlanningDecision(
-                decision="generate_outline",
-                reasoning="大纲不存在，需要先生成大纲",
-                next_actions=["生成报告大纲"],
-                metrics_to_compute=[],
-                priority_metrics=[]
-            )
-        elif state_analysis["coverage"] < 0.8 and state_analysis["valid_pending_metrics"]:
-            # 计算指标 - 使用实际的指标ID
-            metrics_to_compute = state_analysis["valid_pending_ids"][:5]  # 最多计算5个
-            default_decision = PlanningDecision(
-                decision="compute_metrics",
-                reasoning=f"指标覆盖率{state_analysis['coverage']:.1%}，需要计算更多指标",
-                next_actions=[f"计算指标: {', '.join(metrics_to_compute)}"],
-                metrics_to_compute=metrics_to_compute,
-                priority_metrics=metrics_to_compute[:2]  # 前2个为优先级
-            )
-        elif state_analysis["valid_pending_ids"]:
-            # 还有指标但都失败了，生成报告
-            default_decision = PlanningDecision(
-                decision="finalize_report",
-                reasoning="部分指标计算失败，但已有足够信息生成报告",
-                next_actions=["生成最终报告"],
-                metrics_to_compute=[],
-                priority_metrics=[]
-            )
-        else:
-            # 信息充足，生成报告
-            default_decision = PlanningDecision(
-                decision="finalize_report",
-                reasoning="所有必要指标已计算完成",
-                next_actions=["生成最终报告"],
-                metrics_to_compute=[],
-                priority_metrics=[]
-            )
-
-        return default_decision
+   

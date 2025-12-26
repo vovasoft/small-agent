@@ -158,30 +158,8 @@ class OutlineGeneratorAgent:
                             "dependencies": []
                         })
 
-        # 注意：现在依赖LLM根据提示词生成包含所有必需指标的大纲，不再在代码中强制添加
-
-        # 如果LLM没有提供任何指标，则自动补充基础指标
-        if not global_metrics:
-            print("⚠️ LLM未提供指标，使用默认基础指标")
-            available_metrics = self._load_available_metrics()
-
-            # 选择前5个基础指标
-            base_metrics = [m for m in available_metrics if m.get('type') == '基础统计指标'][:5]
-
-            for metric in base_metrics:
-                metric_name = metric['name']
-                knowledge_id = f"metric-{metric_name}"
-                if sections:  # 确保有章节
-                    sections[0]["metrics_needed"].append(knowledge_id)  # 添加到第一个章节
-                global_metrics.append({
-                    "metric_id": knowledge_id,
-                    "metric_name": metric_name,
-                    "calculation_logic": f"使用规则引擎计算{metric_name}: {metric.get('description', '')}",
-                    "required_fields": ["transactions"],
-                    "dependencies": []
-                })
-
-        print(f"📊 最终生成 {len(global_metrics)} 个指标")
+        # 完全依赖LLM生成包含所有必需指标的大纲
+        print(f"🤖 大模型生成 {len(global_metrics)} 个指标")
 
         return {
             "report_title": new_format_data.get("chapter_title", "流水分析报告"),
@@ -189,7 +167,7 @@ class OutlineGeneratorAgent:
             "global_metrics": global_metrics
         }
 
-    def create_prompt(self) -> str:
+    def create_prompt(self, question: str, industry: str) -> str:
         """创建大纲生成提示"""
 
         # 从API动态获取可用的指标列表
@@ -203,15 +181,12 @@ class OutlineGeneratorAgent:
         # 构建基础提示词
         base_prompt = f"""[角色定义]
 你的角色是: 流水分析报告的大纲生成模块。
-你的目标是:
-基于输入的流水分析业务背景信息,
-生成一份可交付、结构清晰、可被程序解析的流水分析报告大纲,
-并以结构化 JSON 的形式，明确每个章节及其下属分析主题所需的分析指标与分析项要求,
-以指导后续分析能力的调用。
+你的目标是:{question},生成一份针对{industry}行业的全面的流水分析报告大纲。
+生成结构清晰、可被程序解析的JSON格式大纲，明确每个章节及其下属分析主题所需的分析指标。
 
 [职责边界]
 你只能完成以下事项:
-1.确定流水分析报告应包含的章节结构
+1.确定{industry}流水分析报告应包含的章节结构
 2.明确每个章节下需要覆盖的分析主题
 3.为每个分析主题列出所需的计算指标、统计指标或分析指标
 
@@ -226,42 +201,62 @@ class OutlineGeneratorAgent:
 
 [可用指标总览]
 系统当前支持 {len(available_metrics)} 个指标。
+指标内容为{available_metrics}
 
 [重要要求]
-请根据用户需求和可用指标列表，从上述指标中选择最相关的指标。优先选择基础统计指标和时间分析指标，确保报告的完整性和实用性。
+请根据用户需求和可用指标列表，从上述指标中选择最相关的指标。必须基于用户查询的具体需求进行智能匹配，确保选择的指标能够充分满足分析需求。
 
 [强制要求]
 生成大纲时，请：
-1. 从可用指标中选择合适的指标组合
-2. 确保选择的指标能够满足用户分析需求
-3. 在metrics_needed数组中列出选定的指标名称
-4. 在global_metrics数组中包含对应指标的详细定义
+1. 仔细分析用户查询，识别所有提到的分析需求点
+2. 从可用指标中选择能够满足这些需求的完整指标组合
+3. 基于语义相关性进行指标筛选，不要过于保守
+4. 在各章节的metrics对象中，按照指标类型(calculation_metrics/statistical_metrics/analysis_metrics)列出选定的指标
+5. 为每个指标提供metric_name和metric_description字段
+6. 优先选择与用户查询直接相关的指标
 
 [可选择的指标列表]
 {metrics_list_text}
 
-[重要兼容性要求]
-虽然你必须使用上述JSON结构输出，但为了确保与现有系统的兼容性，请在输出中额外包含以下字段：
-- 在根级别添加 "report_title": "流水分析报告"
-- 在根级别添加 "global_metrics": [] (空数组或根据实际需求填充指标定义)
-- 确保输出能被现有系统正确解析和使用
+[重要说明]
+请确保：
+- 从提供的可用指标列表中选择最相关的指标
+- 为每个选定的指标提供清晰的名称和描述
+- 输出格式必须严格遵循上述JSON结构
+- 确保选择的指标能够满足用户查询的具体分析需求
 
 [输出格式要求]
 你必须且只能以 JSON 字符串 形式输出分析大纲，不得输出任何解释性自然语言。
 JSON 必须严格遵循以下结构约定:
 {{
-  "chapter_id": "string",
   "chapter_title": "string",
-  "chapter_type": "string",
   "sections": [
     {{
       "section_id": "string",
       "section_title": "string",
       "section_description": "string",
-      "metrics_needed": ["string"]
+      "metrics": {{
+        "calculation_metrics": [
+          {{
+            "metric_name": "string",
+            "metric_description": "string"
+          }}
+        ],
+        "statistical_metrics": [
+          {{
+            "metric_name": "string",
+            "metric_description": "string"
+          }}
+        ],
+        "analysis_metrics": [
+          {{
+            "metric_name": "string",
+            "metric_description": "string"
+          }}
+        ]
+      }}
     }}
-  ],
-  "global_metrics": []
+  ]
 }}"""
 
         return base_prompt
@@ -277,7 +272,7 @@ JSON 必须严格遵循以下结构约定:
 
     async def generate_outline(self, question: str, industry: str, sample_data: List[Dict[str, Any]]) -> ReportOutline:
         """异步生成大纲（修复版：自动补全缺失字段）"""
-        prompt = self.create_prompt()
+        prompt = self.create_prompt(question, industry)
 
         # 在prompt末尾添加业务背景信息
         full_prompt = f"""{prompt}
@@ -355,7 +350,8 @@ JSON 必须严格遵循以下结构约定:
         # 保存API结果到文件
         api_results_dir = "api_results"
         os.makedirs(api_results_dir, exist_ok=True)
-        filename = f"{call_id}.json"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{timestamp}_{call_id}.json"
         filepath = os.path.join(api_results_dir, filename)
 
         try:
@@ -370,13 +366,13 @@ JSON 必须严格遵循以下结构约定:
         print("========================================")
 
         # 后处理，补全缺失的section_id和metric_id
-        outline = self._post_process_outline(outline)
+        outline = self._post_process_outline(outline, question, industry)
 
         return outline
 
-    def _post_process_outline(self, outline: ReportOutline) -> ReportOutline:
+    def _post_process_outline(self, outline: ReportOutline, question: str, industry: str) -> ReportOutline:
         """
-        后处理大纲，自动补全缺失的必需字段
+        后处理大纲，自动补全缺失的必需字段，并基于查询优化指标
         """
         # 为章节补全section_id
         for idx, section in enumerate(outline.sections):
@@ -402,6 +398,11 @@ JSON 必须严格遵循以下结构约定:
                     metric.calculation_logic
                 )
 
+        # 基于用户查询进行指标优化筛选
+        if hasattr(outline, 'global_metrics') and outline.global_metrics:
+            print(f"📊 AI选择了 {len(outline.global_metrics)} 个指标，进行智能优化...")
+            outline = self._optimize_metrics_by_query(outline, question, industry)
+
         return outline
 
     def _infer_required_fields(self, logic: str) -> List[str]:
@@ -423,6 +424,293 @@ JSON 必须严格遵循以下结构约定:
                 fields.extend(field_list)
 
         return list(set(fields))
+
+    def _optimize_metrics_by_query(self, outline: ReportOutline, question: str, industry: str) -> ReportOutline:
+        """
+        基于用户查询进行智能指标优化
+        """
+        # 获取所有可用指标
+        available_metrics = self._load_available_metrics()
+
+        # 已选择的指标名称集合
+        selected_metric_names = {m.metric_name for m in outline.global_metrics}
+
+        # 基于用户查询进行语义匹配，找出缺失的关键指标
+        query_keywords = self._extract_query_keywords(question, industry)
+        missing_key_metrics = self._find_missing_key_metrics(
+            available_metrics, selected_metric_names, query_keywords
+        )
+
+        # 补充缺失的关键指标
+        supplemented_count = 0
+        for metric_name in missing_key_metrics:
+            # 找到对应的可用指标信息
+            available_metric = next((m for m in available_metrics if m['name'] == metric_name), None)
+            if available_metric:
+                # 创建MetricRequirement对象
+                metric_req = MetricRequirement(
+                    metric_id=f"metric-{metric_name}",
+                    metric_name=metric_name,
+                    calculation_logic=f"使用规则引擎计算{metric_name}",
+                    required_fields=["transactions"],
+                    dependencies=[]
+                )
+                outline.global_metrics.append(metric_req)
+                supplemented_count += 1
+                print(f"  补充关键指标: {metric_name}")
+
+        if supplemented_count > 0:
+            print(f"✅ 基于查询分析补充了 {supplemented_count} 个关键指标，总计 {len(outline.global_metrics)} 个指标")
+
+        # 智能分配章节指标需求
+        self._smart_assign_section_metrics(outline)
+
+        return outline
+
+    def _extract_query_keywords(self, question: str, industry: str) -> List[str]:
+        """
+        通过大模型从用户查询中提取关键词
+
+        Args:
+            question: 用户查询
+            industry: 行业信息
+
+        Returns:
+            关键词列表
+        """
+        try:
+            keyword_prompt = ChatPromptTemplate.from_messages([
+                ("system", """你是一个专业的关键词提取专家，需要从用户查询中提取关键的分析指标和业务术语。
+
+请分析查询内容，识别出用户关心的核心指标、分析维度和业务概念。
+
+返回格式：
+请以逗号分隔的关键词列表形式返回，不要其他解释。
+
+示例：
+收入分析, 支出统计, 交易对手, 时间趋势, 占比分析"""),
+                ("human", """用户查询：{question}
+行业背景：{industry}
+
+请提取这个查询中的关键分析指标和业务术语。""")
+            ])
+
+            chain = keyword_prompt | self.llm
+            result = chain.invoke({
+                "question": question,
+                "industry": industry
+            })
+
+            keywords_text = result.content.strip()
+            # 按逗号分割并清理空白
+            keywords = [kw.strip() for kw in keywords_text.split(',') if kw.strip()]
+
+            print(f"🔍 提取到查询关键词: {keywords}")
+            return keywords
+
+        except Exception as e:
+            print(f"⚠️ 关键词提取失败，使用简单分词: {str(e)}")
+            # 备选方案：简单的文本分词
+            import re
+            # 移除标点符号，提取中文词组
+            text = re.sub(r'[^\u4e00-\u9fa5a-zA-Z]', ' ', question)
+            words = [w for w in text.split() if len(w) > 1]
+            print(f"🔄 备选关键词: {words}")
+            return words
+
+    def _find_missing_key_metrics(self, available_metrics: List[Dict], selected_metric_names: set,
+                                  query_keywords: List[str]) -> List[str]:
+        """
+        基于查询关键词找出缺失的关键指标
+
+        Args:
+            available_metrics: 所有可用指标
+            selected_metric_names: 已选择的指标名称集合
+            query_keywords: 查询关键词
+
+        Returns:
+            缺失的关键指标名称列表
+        """
+        if not query_keywords or not available_metrics:
+            return []
+
+        try:
+            missing_prompt = ChatPromptTemplate.from_messages([
+                ("system", """你是一个专业的指标推荐专家，需要根据用户查询的关键词，识别出可能缺失的关键指标。
+
+请分析：
+1. 用户关心的分析维度（收入、支出、排名、趋势等）
+2. 已选择的指标
+3. 可用的指标库
+
+推荐一些重要的缺失指标，帮助完善分析报告。
+
+返回格式：
+只返回指标名称列表，用换行符分隔，不要其他解释。
+
+示例：
+总收入分析
+支出占比统计
+交易对手排名"""),
+                ("human", """查询关键词：{keywords}
+
+已选择的指标：
+{selected_metrics}
+
+可用指标库：
+{available_metrics}
+
+请推荐一些重要的缺失指标。""")
+            ])
+
+            # 格式化输入
+            selected_list = '\n'.join(selected_metric_names) if selected_metric_names else '无'
+            available_list = '\n'.join([m.get('name', '') for m in available_metrics if m.get('name')])
+
+            chain = missing_prompt | self.llm
+            result = chain.invoke({
+                "keywords": ', '.join(query_keywords),
+                "selected_metrics": selected_list,
+                "available_metrics": available_list
+            })
+
+            # 解析结果
+            recommended_metrics = []
+            for line in result.content.strip().split('\n'):
+                metric_name = line.strip()
+                if metric_name and metric_name not in selected_metric_names:
+                    # 验证指标是否存在于可用指标库中
+                    if any(m.get('name') == metric_name for m in available_metrics):
+                        recommended_metrics.append(metric_name)
+
+            print(f"📊 推荐缺失指标: {recommended_metrics}")
+            return recommended_metrics
+
+        except Exception as e:
+            print(f"⚠️ 指标推荐失败: {str(e)}")
+            return []
+
+    def _smart_assign_section_metrics(self, outline: ReportOutline) -> None:
+        """
+        智能分配章节指标需求
+
+        Args:
+            outline: 报告大纲对象，会被原地修改
+        """
+        if not outline.sections or not outline.global_metrics:
+            return
+
+        try:
+            # 获取所有可用的指标ID
+            available_metric_ids = {m.metric_id for m in outline.global_metrics}
+
+            assign_prompt = ChatPromptTemplate.from_messages([
+                ("system", """你是一个专业的报告结构专家，需要将全局指标智能分配到各个章节。
+
+分配原则：
+1. 每个章节分配3-5个最相关的指标
+2. 指标应与章节内容高度相关
+3. 避免重复分配相同的指标
+4. 优先分配核心指标到主要章节
+
+返回格式：
+为每个章节返回指标ID列表，用分号分隔章节，格式如下：
+章节ID:指标ID1,指标ID2,指标ID3
+
+示例：
+sec_1:metric-total_income,metric-expense_trend,metric-profit_margin
+sec_2:metric-customer_analysis,metric-market_share"""),
+                ("human", """报告标题：{report_title}
+
+章节列表：
+{sections}
+
+可用指标：
+{available_metrics}
+
+请为每个章节分配最合适的指标ID。""")
+            ])
+
+            # 格式化输入
+            sections_text = '\n'.join([
+                f"{section.section_id}: {section.title} - {section.description}"
+                for section in outline.sections
+            ])
+
+            available_metrics_text = '\n'.join([
+                f"{m.metric_id}: {m.metric_name} - {m.calculation_logic}"
+                for m in outline.global_metrics
+            ])
+
+            chain = assign_prompt | self.llm
+            result = chain.invoke({
+                "report_title": outline.report_title,
+                "sections": sections_text,
+                "available_metrics": available_metrics_text
+            })
+
+            # 解析结果并分配指标
+            lines = result.content.strip().split('\n')
+            assigned_metrics = set()  # 避免重复分配
+
+            for line in lines:
+                if ':' not in line:
+                    continue
+
+                section_id, metrics_str = line.split(':', 1)
+                section_id = section_id.strip()
+
+                # 找到对应的章节
+                section = next((s for s in outline.sections if s.section_id == section_id), None)
+                if not section:
+                    continue
+
+                # 解析指标ID列表
+                metric_ids = [mid.strip() for mid in metrics_str.split(',') if mid.strip()]
+
+                # 验证指标ID并分配（避免重复）
+                valid_metrics = []
+                for metric_id in metric_ids:
+                    if metric_id in available_metric_ids and metric_id not in assigned_metrics:
+                        valid_metrics.append(metric_id)
+                        assigned_metrics.add(metric_id)
+
+                    # 每个章节最多分配5个指标
+                    if len(valid_metrics) >= 5:
+                        break
+
+                section.metrics_needed = valid_metrics
+                print(f"📋 章节 '{section.title}' 分配了 {len(valid_metrics)} 个指标: {valid_metrics}")
+
+            # 检查是否有章节没有分配到指标，如果有则平均分配剩余指标
+            unassigned_sections = [s for s in outline.sections if not s.metrics_needed]
+            remaining_metrics = [m.metric_id for m in outline.global_metrics if m.metric_id not in assigned_metrics]
+
+            if unassigned_sections and remaining_metrics:
+                print(f"🔄 为 {len(unassigned_sections)} 个未分配章节平均分配剩余指标")
+                metrics_per_section = max(1, len(remaining_metrics) // len(unassigned_sections))
+
+                for i, section in enumerate(unassigned_sections):
+                    start_idx = i * metrics_per_section
+                    end_idx = min(start_idx + metrics_per_section, len(remaining_metrics))
+                    section.metrics_needed = remaining_metrics[start_idx:end_idx]
+                    print(f"📋 章节 '{section.title}' 分配了 {len(section.metrics_needed)} 个指标: {section.metrics_needed}")
+
+        except Exception as e:
+            print(f"⚠️ 智能指标分配失败，使用平均分配: {str(e)}")
+            # 备选方案：平均分配所有指标到各个章节
+            if outline.sections and outline.global_metrics:
+                all_metric_ids = [m.metric_id for m in outline.global_metrics]
+                metrics_per_section = max(1, len(all_metric_ids) // len(outline.sections))
+
+                for i, section in enumerate(outline.sections):
+                    start_idx = i * metrics_per_section
+                    end_idx = min(start_idx + metrics_per_section, len(all_metric_ids))
+                    section.metrics_needed = all_metric_ids[start_idx:end_idx]
+                    print(f"🔄 备选分配 - 章节 '{section.title}' 分配了 {len(section.metrics_needed)} 个指标")
+
+   
+   
 
     def _load_available_knowledge(self) -> List[Dict[str, Any]]:
         """
@@ -518,7 +806,7 @@ JSON 必须严格遵循以下结构约定:
 
     def _match_metric_to_knowledge(self, metric_name: str, metric_description: str) -> str:
         """
-        根据指标名称和描述匹配最合适的知识ID
+        通过大模型判断指标是否与可用知识匹配
 
         Args:
             metric_name: 指标名称
@@ -530,7 +818,7 @@ JSON 必须严格遵循以下结构约定:
         if not self.available_knowledge:
             return ""
 
-        # 精确匹配：直接用指标名称匹配知识ID
+        # 首先尝试精确匹配：直接用指标名称匹配知识ID
         for knowledge in self.available_knowledge:
             knowledge_id = knowledge.get("id", "")
             # 去掉前缀匹配，如 "metric-分析账户数量" 匹配 "分析账户数量"
@@ -538,84 +826,66 @@ JSON 必须严格遵循以下结构约定:
                 print(f"🔗 精确匹配指标 '{metric_name}' -> 知识ID: {knowledge_id}")
                 return knowledge_id
 
-        # 扩展匹配：匹配更多的农业相关指标
-        if "农业" in metric_name:
-            if "总经营收入" in metric_name:
-                # 匹配农业总经营收入
-                for knowledge in self.available_knowledge:
-                    if knowledge.get("id") == "metric-农业总经营收入":
-                        print(f"🔗 扩展匹配指标 '{metric_name}' -> 知识ID: metric-农业总经营收入")
-                        return "metric-农业总经营收入"
-            if "总经营支出" in metric_name:
-                # 匹配农业总经营支出
-                for knowledge in self.available_knowledge:
-                    if knowledge.get("id") == "metric-农业总经营支出":
-                        print(f"🔗 扩展匹配指标 '{metric_name}' -> 知识ID: metric-农业总经营支出")
-                        return "metric-农业总经营支出"
-            if "交易对手收入排名TOP3" in metric_name or "收入排名" in metric_name:
-                # 匹配农业交易对手收入TOP3
-                for knowledge in self.available_knowledge:
-                    if knowledge.get("id") == "metric-农业交易对手经营收入top3":
-                        print(f"🔗 扩展匹配指标 '{metric_name}' -> 知识ID: metric-农业交易对手经营收入top3")
-                        return "metric-农业交易对手经营收入top3"
-            if "交易对手支出排名TOP3" in metric_name or "支出排名" in metric_name:
-                # 匹配农业交易对手支出TOP3
-                for knowledge in self.available_knowledge:
-                    if knowledge.get("id") == "metric-农业交易对手经营支出top3":
-                        print(f"🔗 扩展匹配指标 '{metric_name}' -> 知识ID: metric-农业交易对手经营支出top3")
-                        return "metric-农业交易对手经营支出top3"
+        # 使用大模型进行语义匹配
+        match_prompt = ChatPromptTemplate.from_messages([
+            ("system", """你是一个专业的指标匹配专家，需要根据指标名称和描述，从提供的知识库中找到最合适的匹配项。
 
-        # 如果精确匹配失败，使用关键词匹配
-        keywords = [metric_name]
-        if metric_description:
-            # 从描述中提取关键信息
-            desc_lower = metric_description.lower()
-            if "收入" in metric_name or "收入" in desc_lower:
-                keywords.extend(["收入", "总收入", "经营收入"])
-            if "支出" in metric_name or "支出" in desc_lower:
-                keywords.extend(["支出", "总支出", "经营支出"])
-            if "排名" in metric_name or "top" in desc_lower:
-                keywords.append("排名")
-            if "比例" in metric_name or "占比" in desc_lower:
-                keywords.append("比例")
-            if "时间范围" in metric_name:
-                keywords.append("时间范围")
-            if "账户" in metric_name:
-                keywords.append("账户")
+请分析指标的语义含义和计算逻辑，判断哪个知识项最匹配。
 
-        best_match = None
-        best_score = 0
+返回格式：
+如果找到匹配：返回知识ID
+如果未找到匹配：返回空字符串 ""
 
-        for knowledge in self.available_knowledge:
-            knowledge_id = knowledge.get("id", "")
-            knowledge_desc = knowledge.get("description", "").lower()
+只返回知识ID或空字符串，不要其他解释。"""),
+            ("human", """指标信息：
+名称：{metric_name}
+描述：{metric_description}
 
-            # 计算匹配分数
-            score = 0
-            for keyword in keywords:
-                if keyword.lower() in knowledge_desc:
-                    score += 1
+可用知识库：
+{knowledge_list}
 
-            # 行业匹配加分
-            if "黑色金属" in knowledge_desc and "黑色金属" in metric_name:
-                score += 2
-            if "农业" in knowledge_desc and "农业" in metric_name:
-                score += 2
+请判断这个指标是否与知识库中的某个项目匹配。如果匹配，返回对应的知识ID；如果不匹配，返回空字符串。""")
+        ])
 
-            # 直接名称匹配加分
-            if metric_name.lower() in knowledge_desc:
-                score += 3
+        # 构建知识库描述
+        knowledge_list = "\n".join([
+            f"ID: {k.get('id', '')}\n描述: {k.get('description', '')}"
+            for k in self.available_knowledge
+        ])
 
-            if score > best_score:
-                best_score = score
-                best_match = knowledge_id
+        try:
+            # 调用大模型进行匹配
+            chain = match_prompt | self.llm
+            result = chain.invoke({
+                "metric_name": metric_name,
+                "metric_description": metric_description or "无描述",
+                "knowledge_list": knowledge_list
+            })
 
-        if best_match and best_score > 0:
-            print(f"🔗 关键词匹配指标 '{metric_name}' -> 知识ID: {best_match} (匹配分数: {best_score})")
-            return best_match
+            matched_knowledge_id = result.content.strip()
 
-        print(f"❌ 指标 '{metric_name}' 未找到匹配的知识ID")
-        return ""
+            # 验证返回的知识ID是否存在于可用知识中
+            if matched_knowledge_id and any(k.get("id") == matched_knowledge_id for k in self.available_knowledge):
+                print(f"🤖 大模型匹配指标 '{metric_name}' -> 知识ID: {matched_knowledge_id}")
+                return matched_knowledge_id
+            else:
+                print(f"❌ 大模型未找到指标 '{metric_name}' 的匹配项")
+                return ""
+
+        except Exception as e:
+            print(f"⚠️ 大模型匹配失败，使用备选方案: {str(e)}")
+            # 备选方案：简单的关键词匹配（不包含特定业务逻辑）
+            for knowledge in self.available_knowledge:
+                knowledge_id = knowledge.get("id", "")
+                knowledge_desc = knowledge.get("description", "").lower()
+
+                # 检查指标名称是否在知识描述中出现
+                if metric_name.lower() in knowledge_desc:
+                    print(f"🔄 备选匹配指标 '{metric_name}' -> 知识ID: {knowledge_id}")
+                    return knowledge_id
+
+            print(f"❌ 指标 '{metric_name}' 未找到匹配的知识ID")
+            return ""
 
 
 async def generate_report_outline(question: str, industry: str, sample_data: List[Dict[str, Any]], api_key: str, max_retries: int = 3, retry_delay: float = 2.0) -> ReportOutline:

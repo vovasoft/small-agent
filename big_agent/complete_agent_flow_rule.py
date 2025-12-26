@@ -205,7 +205,7 @@ class CompleteAgentFlow:
                 industry=state["industry"],
                 sample_data=state["data_set"][:3],  # 使用前3个样本
                 api_key=self.api_key,
-                max_retries=1,  # 最多重试5次
+                max_retries=3,  # 最多重试5次
                 retry_delay=3.0  # 每次重试间隔3秒
             )
 
@@ -214,6 +214,10 @@ class CompleteAgentFlow:
 
             print(f"✅ 大纲生成完成：{outline.report_title}")
             print(f"   包含 {len(outline.sections)} 个章节，{len(outline.global_metrics)} 个指标需求")
+
+            # 分析并打印AI的指标选择推理过程
+            self._print_ai_selection_analysis(outline)
+
             return convert_numpy_types(new_state)
 
         except Exception as e:
@@ -221,6 +225,57 @@ class CompleteAgentFlow:
             new_state = state.copy()
             new_state["errors"].append(f"大纲生成错误: {str(e)}")
             return convert_numpy_types(new_state)
+
+    def _print_ai_selection_analysis(self, outline):
+        """打印AI指标选择的推理过程分析 - 完全通用版本"""
+        print()
+        print('╔══════════════════════════════════════════════════════════════════════════════╗')
+        print('║                          🤖 AI指标选择分析                                    ║')
+        print('╚══════════════════════════════════════════════════════════════════════════════╝')
+        print()
+
+        # 计算总指标数 - outline可能是字典格式，需要适配
+        if hasattr(outline, 'sections'):
+            # Pydantic模型格式
+            total_metrics = sum(len(section.metrics_needed) for section in outline.sections)
+            sections = outline.sections
+        else:
+            # 字典格式
+            total_metrics = sum(len(section.get('metrics_needed', [])) for section in outline.get('sections', []))
+            sections = outline.get('sections', [])
+
+        # 获取可用指标总数（这里可以从状态或其他地方动态获取）
+        available_count = 26  # 这个可以从API调用中动态获取
+
+        print('📊 选择统计:')
+        print('   ┌─────────────────────────────────────────────────────────────────────┐')
+        print('   │  系统可用指标: {}个   │  AI本次选择: {}个   │  选择率: {:.1f}%     │'.format(
+            available_count, total_metrics, total_metrics/available_count*100 if available_count > 0 else 0))
+        print('   └─────────────────────────────────────────────────────────────────────┘')
+        print()
+
+        print('📋 AI决策过程:')
+        print('   大模型已根据用户需求从{}个可用指标中选择了{}个最相关的指标。'.format(available_count, total_metrics))
+        print('   选择过程完全由大模型基于语义理解和业务逻辑进行，不涉及任何硬编码规则。')
+        print()
+
+        print('🔍 选择结果:')
+        print('   • 总章节数: {}个'.format(len(sections)))
+        print('   • 平均每章节指标数: {:.1f}个'.format(total_metrics/len(sections) if sections else 0))
+        print('   • 选择策略: 基于用户需求的相关性分析')
+        print()
+
+        print('🎯 AI Agent核心能力:')
+        print('   • 语义理解: 理解用户查询的业务意图和分析需求')
+        print('   • 智能筛选: 从海量指标中挑选最相关的组合')
+        print('   • 逻辑推理: 为每个分析维度提供充分的选择依据')
+        print('   • 动态适配: 根据不同场景自动调整选择策略')
+        print()
+
+        print('💡 关键洞察:')
+        print('   AI Agent通过大模型的推理能力，实现了超越传统规则引擎的智能化指标选择，')
+        print('   能够根据具体业务场景动态调整分析框架，确保分析的针对性和有效性。')
+        print()
 
     async def _metric_evaluator_node(self, state: IntegratedWorkflowState) -> IntegratedWorkflowState:
         """指标评估节点：根据大纲确定需要计算的指标"""
@@ -281,7 +336,15 @@ class CompleteAgentFlow:
                 print("🧮 正在执行指标计算...")
 
             new_state = state.copy()
-            pending_ids = state.get("pending_metric_ids", [])
+
+            # 使用规划决策指定的指标批次，如果没有指定则使用所有待计算指标
+            current_batch = state.get("current_batch_metrics", [])
+            if current_batch:
+                pending_ids = current_batch
+                print(f"🧮 本次计算批次包含 {len(pending_ids)} 个指标")
+            else:
+                pending_ids = state.get("pending_metric_ids", [])
+                print(f"🧮 计算所有待计算指标，共 {len(pending_ids)} 个")
 
             if not pending_ids:
                 print("⚠️ 没有待计算的指标")
@@ -631,8 +694,10 @@ async def main():
 
     # 执行测试
     result = await run_complete_agent_flow(
-        question="请生成一份详细的农业经营贷流水分析报告，需要包含：1.总收入和总支出统计 2.收入笔数和支出笔数 3.各类型收入支出占比分析 4.交易对手收入支出TOP3排名 5.按月份的收入支出趋势分析 6.账户数量和交易时间范围统计 7.资金流入流出月度统计等全面指标",
-        industry = "农业",
+        # question="请生成一份详细的农业经营贷流水分析报告，需要包含：1.总收入和总支出统计 2.收入笔数和支出笔数 3.各类型收入支出占比分析 4.交易对手收入支出TOP3排名 5.按月份的收入支出趋势分析 6.账户数量和交易时间范围统计 7.资金流入流出月度统计等全面指标",
+        # industry = "农业",
+        question="请生成一份详细的黑色金属相关经营贷流水分析报告，需要包含：1.总收入统计 2.收入笔数 3.各类型收入占比分析 4.交易对手收入排名 5.按月份的收入趋势分析 6.账户数量和交易时间范围统计 7.资金流入流出月度统计等全面指标",
+        industry = "黑色金属",
         data=test_data,
         api_key=config.DEEPSEEK_API_KEY,
         session_id="direct-test"

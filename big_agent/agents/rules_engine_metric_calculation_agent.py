@@ -342,7 +342,8 @@ class RulesEngineMetricCalculationAgent:
                     # 保存API结果到文件
                     api_results_dir = "api_results"
                     os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{timestamp}_{call_id}.json"
                     filepath = os.path.join(api_results_dir, filename)
 
                     try:
@@ -388,7 +389,8 @@ class RulesEngineMetricCalculationAgent:
                     # 保存API结果到文件
                     api_results_dir = "api_results"
                     os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{timestamp}_{call_id}.json"
                     filepath = os.path.join(api_results_dir, filename)
 
                     try:
@@ -663,7 +665,8 @@ class RulesEngineMetricCalculationAgent:
                     # 保存API结果到文件
                     api_results_dir = "api_results"
                     os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{timestamp}_{call_id}.json"
                     filepath = os.path.join(api_results_dir, filename)
 
                     try:
@@ -709,7 +712,8 @@ class RulesEngineMetricCalculationAgent:
                     # 保存API结果到文件
                     api_results_dir = "api_results"
                     os.makedirs(api_results_dir, exist_ok=True)
-                    filename = f"{call_id}.json"
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    filename = f"{timestamp}_{call_id}.json"
                     filepath = os.path.join(api_results_dir, filename)
 
                     try:
